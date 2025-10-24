@@ -1,0 +1,166 @@
+---
+alwaysApply: true
+---
+
+# 技術スタック
+本プロジェクトの技術スタックについて記載しています。
+
+## プロジェクト概要
+- **目的**: ポートフォリオとして機能するブログサイトを作成する
+
+## 技術スタック
+- **Frontend**: Next.js 16 + TypeScript + React 19
+- **Backend**: Next.js API Routes + Hono
+- **Styling**: Tailwind CSS
+- **Font**: Noto Sans JP（Next.js Font Optimization）
+- **Dev Tools**: ESLint, Prettier
+- **CMS**: WordPress REST API
+
+## アーキテクチャ
+- bulletproof-reactに準拠したディレクトリ設計を採用
+- 関数型プログラミングとクリーンアーキテクチャを採用
+- 関数型ドメインモデリングを採用
+
+## アーキテクチャ設計原則
+
+### 関数型プログラミング
+- 純粋関数の使用を優先
+- 副作用の分離と制御
+- 不変性（Immutability）の維持
+- 関数の合成とパイプライン処理
+- 高階関数の活用
+
+### 関数型ドメインモデリング
+- ドメインロジックの純粋関数化
+- 値オブジェクト（Value Objects）の活用
+- ドメインイベントの関数型実装
+- 不変データ構造の使用
+- 型安全なドメインモデリング
+
+### クリーンアーキテクチャ
+- 依存関係の逆転（Dependency Inversion）
+- レイヤー分離の徹底
+- ビジネスロジックの独立性
+- フレームワーク非依存の設計
+- テスタビリティの確保
+
+### bulletproof-react準拠
+- 機能別ディレクトリ構造
+- コンポーネントの責任分離
+- カスタムフックの活用
+- 型安全なProps設計
+- テスト可能な設計
+
+## コーディング規約
+
+### TypeScript
+- 厳密な型定義を使用
+- `any`型の使用を避け、適切な型を定義
+- 型定義は可能な限り`interface`を用いる (パフォーマンス向上のため)
+- 関数型プログラミングに適した型設計
+
+### React/Next.js
+- App Routerを使用
+- サーバーコンポーネントを優先し、必要時のみクライアントコンポーネント
+- `"use client"`ディレクティブは必要最小限に使用
+- Next.js 16、React 19の新機能を活用
+- 関数型コンポーネントの使用
+- カスタムフックによるロジック分離
+
+### コンポーネント設計
+- **UIコンポーネント**: `components/ui/`に配置し、再利用可能に設計
+- **ページ固有コンポーネント**: 各ディレクトリ内の`components/`に配置
+- **ドメインコンポーネント**: `features/`内に機能別に配置
+- Props interfaceは`{ComponentName}Props`の命名規約
+- 純粋関数コンポーネントの設計
+
+### CSS/Styling
+- Tailwind CSSのユーティリティクラスを優先
+- カスタムCSSは`globals.css`またはコンポーネントレベルで定義
+- レスポンシブデザインは`sm:`, `md:`, `lg:`プレフィックスを使用
+
+### ディレクトリ構造（bulletproof-react準拠）
+```
+src/
+├── app/                    # Next.js App Router
+├── components/             # 共有UIコンポーネント
+│   ├── ui/                # 基本UIコンポーネント
+│   └── common/            # 共通コンポーネント
+├── features/              # 機能別ドメイン
+│   ├── auth/              # 認証機能
+│   ├── blog/              # ブログ機能
+│   └── portfolio/          # ポートフォリオ機能
+├── lib/                   # ライブラリ・ユーティリティ
+│   ├── api/               # API関連
+│   ├── utils/             # ユーティリティ関数
+│   └── types/             # 型定義
+├── hooks/                 # カスタムフック
+└── store/                 # 状態管理
+```
+
+### ファイル命名規約
+- コンポーネントファイル: Lower Kebab Case `my-component.tsx`
+- コンポーネント: Upper Camel Case `MyComponent`
+- ページファイル: Lower Kebab Case `page.tsx`, `layout.tsx`, `not-found.tsx`
+- 設定ファイル: Lower Kebab Case `config.ts`, `index.ts`
+- 型定義ファイル: Lower Kebab Case `types.ts`
+- 定数: Upper Snake Case `MY_CONSTANT`
+- ドメイン関数: camelCase `validateUserInput`
+- カスタムフック: `use` prefix `useAuthState`
+
+### Import/Export
+- 相対パスよりも絶対パスを優先
+- `components/ui/index.ts`からの一括エクスポート/インポート
+- 外部ライブラリのインポートを最初に記述
+- 内部モジュールのインポートを次に記述
+- 関数型プログラミングに適したインポート順序
+
+### エラーハンドリング
+- try-catch文を適切に使用
+- ユーザーフレンドリーなエラーメッセージを表示
+- 404ページは既存のカスタムページを使用
+- 関数型エラーハンドリング（Either、Result型）の活用
+- 純粋関数でのエラー処理
+
+### パフォーマンス
+- SSR (Server Side Rendering)を活用
+- 画像最適化にNext.js Image コンポーネントを使用
+- 関数型プログラミングによる最適化
+- メモ化（useMemo、useCallback）の適切な使用
+- 不変データ構造による効率的な更新
+
+### アクセシビリティ
+- セマンティックなHTML要素を使用
+- 適切なARIAラベルを設定
+- キーボードナビゲーションをサポート
+- 色のコントラスト比を確保
+
+## 禁止事項
+- `any`型の使用
+- インラインスタイルの使用
+- 非同期処理でのPromiseチェーンの使用（async/awaitを使用）
+- 副作用を含む純粋関数の作成
+- ミューテーション（直接的なデータ変更）
+- グローバル状態の直接操作
+
+## 推奨事項
+- コンポーネントの単一責任の原則を遵守
+- 再利用可能なUIコンポーネントの作成
+- 適切なコメントとドキュメント作成
+- Prettier設定に従ったコードフォーマット
+- ESLintルールの遵守
+- 純粋関数の活用
+- 不変データ構造の使用
+- 関数の合成とパイプライン処理
+- 型安全なドメインモデリング
+- テスタビリティの高い設計
+
+## デプロイ・運用
+- GitHub Actionsによる自動デプロイ
+
+## 注意事項
+- 画像やアセットは`public/`ディレクトリに配置
+- レスポンシブデザインの徹底
+- 関数型プログラミングの学習コストを考慮
+- クリーンアーキテクチャの複雑性管理
+- bulletproof-reactパターンの一貫した適用
