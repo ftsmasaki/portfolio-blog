@@ -166,14 +166,6 @@ export interface Post {
   updatedAt: Date;
   featuredImage?: string;
   tags: Tag[];
-  author: Author;
-}
-
-export interface Author {
-  id: number;
-  name: string;
-  email: string;
-  avatar?: string;
 }
 ```
 
@@ -325,7 +317,7 @@ export const getOrElse = <A>(defaultValue: A) => (ma: TE.TaskEither<AppError, A>
 - ブログ関連の値オブジェクト（PostId, PostTitle, PostSlug, PostExcerpt, PostDate）
 - 実績関連の値オブジェクト（WorkId, WorkTitle, WorkDescription, Technology）
 - タグ関連の値オブジェクト（TagId, TagName, TagSlug, TagCount）
-- 共通の値オブジェクト（ImageUrl, GitHubUrl, LiveUrl, Email, AuthorName）
+- 共通の値オブジェクト（ImageUrl, GitHubUrl, LiveUrl）
 - バリデーション関数の実装
 
 ### 主要ファイル
@@ -418,7 +410,7 @@ export * from './validation';
 値オブジェクトを使用したドメインエンティティとポートの実装
 
 ### 実装内容
-- ドメインエンティティの実装（Post, Work, Tag, Author）
+- ドメインエンティティの実装（Post, Work, Tag）
 - ドメインポートの実装（PostRepository, WorkRepository, TagRepository）
 
 ### 主要ファイル
@@ -429,7 +421,7 @@ import type {
   PostId, PostTitle, PostSlug, PostExcerpt, PostDate, 
   WorkId, WorkTitle, WorkDescription, Technology,
   TagId, TagName, TagSlug, TagCount,
-  ImageUrl, GitHubUrl, LiveUrl, AuthorName 
+  ImageUrl, GitHubUrl, LiveUrl, WorkSlug
 } from './value-objects';
 
 export interface Post {
@@ -442,13 +434,12 @@ export interface Post {
   updatedAt: PostDate;
   featuredImage?: ImageUrl;
   tags: TagName[];
-  author: AuthorName;
 }
 
 export interface Work {
   id: WorkId;
   title: WorkTitle;
-  slug: string;
+  slug: WorkSlug;
   description: WorkDescription;
   technologies: Technology[];
   githubUrl?: GitHubUrl;
@@ -463,13 +454,6 @@ export interface Tag {
   name: TagName;
   slug: TagSlug;
   count: TagCount;
-}
-
-export interface Author {
-  id: number;
-  name: AuthorName;
-  email?: string;
-  avatar?: ImageUrl;
 }
 ```
 

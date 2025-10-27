@@ -83,7 +83,6 @@ export const WordPressPostSchema = z.object({
   tags: z.array(z.number()).optional(),
   _embedded: z.object({
     'wp:featuredmedia': z.array(z.object({ source_url: z.string() })).optional(),
-    author: z.array(z.object({ name: z.string() })).optional(),
   }).optional(),
 });
 
@@ -98,7 +97,6 @@ export const PostSchema = z.object({
   updatedAt: z.string(),
   featuredImage: z.string().optional(),
   tags: z.array(z.string()),
-  author: z.string(),
 });
 
 export type WordPressPost = z.infer<typeof WordPressPostSchema>;

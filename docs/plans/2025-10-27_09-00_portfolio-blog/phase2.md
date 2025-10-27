@@ -221,12 +221,6 @@ export const mapWordPressPostToDomain = (wpPost: unknown): E.Either<Error, Post>
         updatedAt: new Date(validatedWpPost.modified),
         featuredImage: validatedWpPost._embedded?.['wp:featuredmedia']?.[0]?.source_url,
         tags: validatedWpPost._embedded?.['wp:term']?.[0] || [],
-        author: {
-          id: validatedWpPost._embedded?.author?.[0]?.id || 0,
-          name: validatedWpPost._embedded?.author?.[0]?.name || 'Unknown',
-          email: validatedWpPost._embedded?.author?.[0]?.email || '',
-          avatar: validatedWpPost._embedded?.author?.[0]?.avatar_urls?.['96'] || undefined,
-        },
       };
     },
     (error) => new Error(`Mapping error: ${error}`)
@@ -455,7 +449,6 @@ export const WordPressPostSchema = z.object({
   tags: z.array(z.number()).optional(),
   _embedded: z.object({
     'wp:featuredmedia': z.array(z.object({ source_url: z.string() })).optional(),
-    author: z.array(z.object({ name: z.string() })).optional(),
   }).optional(),
 });
 
@@ -469,7 +462,6 @@ export const PostSchema = z.object({
   updatedAt: z.string(),
   featuredImage: z.string().optional(),
   tags: z.array(z.string()),
-  author: z.string(),
 });
 
 export type WordPressPost = z.infer<typeof WordPressPostSchema>;

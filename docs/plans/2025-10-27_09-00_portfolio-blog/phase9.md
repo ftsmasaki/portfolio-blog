@@ -75,7 +75,6 @@ export const generatePostMetadata = (post: Post): Metadata => {
   return {
     title: post.title,
     description: post.excerpt,
-    authors: [{ name: post.author.name }],
     openGraph: {
       title: post.title,
       description: post.excerpt,
@@ -112,10 +111,6 @@ export const generateArticleStructuredData = (post: Post) => {
     image: post.featuredImage ? `${siteUrl}${post.featuredImage}` : undefined,
     datePublished: post.createdAt.toISOString(),
     dateModified: post.updatedAt.toISOString(),
-    author: {
-      '@type': 'Person',
-      name: post.author.name,
-    },
   };
 };
 ```
