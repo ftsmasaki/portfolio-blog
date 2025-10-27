@@ -527,7 +527,7 @@ export const getRelativeDate = (date: Date): string => {
 
 ---
 
-## フェーズ1.7: shadcn/uiコンポーネントのセットアップ
+## ✅ フェーズ1.7: shadcn/uiコンポーネントのセットアップ
 
 ### 目的
 shadcn/uiコンポーネントの初期設定と基本コンポーネントの追加
@@ -542,14 +542,23 @@ shadcn/uiコンポーネントの初期設定と基本コンポーネントの�
 npx shadcn@latest init
 
 # 必要なコンポーネントを追加
-npx shadcn@latest add button card navigation-menu input popover pagination
+npx shadcn@latest add button card navigation-menu input popover pagination dialog
 ```
 
+### インストール済みコンポーネント
+- ✅ button.tsx
+- ✅ card.tsx
+- ✅ dialog.tsx
+- ✅ input.tsx
+- ✅ navigation-menu.tsx
+- ✅ pagination.tsx
+- ✅ popover.tsx
+
 ### 完了条件
-- [ ] shadcn/uiが初期化済み
-- [ ] 必要なコンポーネントがインストール済み
-- [ ] components.jsonが正しく設定されている
-- [ ] 型チェックエラーが0件
+- ✅ shadcn/uiが初期化済み
+- ✅ 必要なコンポーネントがインストール済み
+- ✅ components.jsonが正しく設定されている
+- ✅ 型チェックエラーが0件
 
 ---
 
