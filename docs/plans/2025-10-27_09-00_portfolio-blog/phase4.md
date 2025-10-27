@@ -5,8 +5,8 @@ UIコンポーネント、カスタムフック、Zustandストアの実装。
 
 ## サブフェーズ構成
 - **✅ フェーズ4.1**: UIコンポーネント（Button/Card/GlassCard）の実装
-- **⌛ フェーズ4.2**: UIコンポーネント（Pagination）の実装
-- **⌛ フェーズ4.3**: カスタムフック（useTheme、useIntersection、useLocalStorage）の実装
+- **✅ フェーズ4.2**: UIコンポーネント（Pagination）の実装
+- **✅ フェーズ4.3**: カスタムフック（useTheme、useIntersection、useLocalStorage）の実装
 - **⌛ フェーズ4.4**: Zustandストアの実装
 - **⌛ フェーズ4.5**: ユーティリティ関数の実装
 
@@ -174,12 +174,12 @@ export const Pagination = ({
 
 ### 完了条件
 - ✅ Paginationコンポーネントが実装済み
-- ⌛ 正常に動作
+- ✅ 正常に動作
 - ✅ 型チェックエラーが0件
 
 ---
 
-## フェーズ4.3: カスタムフック（useTheme、useIntersection、useLocalStorage）の実装
+## ✅ フェーズ4.3: カスタムフック（useTheme、useIntersection、useLocalStorage）の実装
 
 ### 目的
 再利用可能なカスタムフックの実装
@@ -209,10 +209,10 @@ export const useTheme = () => {
 ```
 
 ### 完了条件
-- [ ] useThemeが実装済み
-- [ ] useIntersectionが実装済み
-- [ ] useLocalStorageが実装済み
-- [ ] 型チェックエラーが0件
+- ✅ useThemeが実装済み
+- ✅ useIntersectionが実装済み
+- ✅ useLocalStorageが実装済み
+- ✅ 型チェックエラーが0件
 
 ---
 

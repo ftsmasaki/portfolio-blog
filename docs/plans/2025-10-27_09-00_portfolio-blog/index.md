@@ -384,8 +384,8 @@ sequenceDiagram
 
 ### ⌛ [フェーズ4: プレゼンテーション層実装（基本コンポーネント）](./phase4.md)
 - **✅ フェーズ4.1**: UIコンポーネント（Button/Card/GlassCard）の実装
-- **⌛ フェーズ4.2**: UIコンポーネント（Pagination）の実装
-- **⌛ フェーズ4.3**: カスタムフック（useTheme、useIntersection、useLocalStorage）の実装
+- **✅ フェーズ4.2**: UIコンポーネント（Pagination）の実装
+- **✅ フェーズ4.3**: カスタムフック（useTheme、useIntersection、useLocalStorage）の実装
 - **⌛ フェーズ4.4**: Zustandストアの実装
 - **⌛ フェーズ4.5**: ユーティリティ関数の実装
 
