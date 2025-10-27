@@ -612,7 +612,7 @@ export const useTheme = () => {
 
 ---
 
-## フェーズ1.9: 基本レイアウト（Header/Footer）の実装
+## ✅ フェーズ1.9: 基本レイアウト（Header/Footer）の実装
 
 ### 目的
 レスポンシブ対応の基本レイアウトとグラスモーフィズムナビゲーションの実装
@@ -627,59 +627,27 @@ export const useTheme = () => {
 ### 主要ファイル
 
 **ルートレイアウト (`app/layout.tsx`)**
-```typescript
-import type { Metadata } from 'next';
-import { Noto_Sans_JP } from 'next/font/google';
-import { ThemeProvider } from 'next-themes';
-import { Header } from '@/components/common/header';
-import { Footer } from '@/components/common/footer';
-import '@/app/globals.css';
+- ThemeProviderの追加
+- Noto Sans JPフォントの設定
+- Header/Footerコンポーネントの統合
 
-const notoSansJP = Noto_Sans_JP({
-  weight: ['400', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-});
+**ヘッダーコンポーネント (`presentation/components/common/header.tsx`)**
+- グラスモーフィズムスタイル
+- ThemeToggleの統合
+- レスポンシブ対応
 
-export const metadata: Metadata = {
-  title: 'Portfolio Blog',
-  description: 'ポートフォリオブログサイト',
-};
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="ja" suppressHydrationWarning>
-      <body className={notoSansJP.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Header />
-          <main className="min-h-screen pt-20">
-            {children}
-          </main>
-          <Footer />
-        </ThemeProvider>
-      </body>
-    </html>
-  );
-}
-```
+**フッターコンポーネント (`presentation/components/common/footer.tsx`)**
+- サイト情報とコピーライト
+- レスポンシブ対応
 
 ### 完了条件
-- [ ] ルートレイアウトが正常に動作
-- [ ] ThemeProviderが正しく設定されている
-- [ ] ヘッダーがグラスモーフィズムで表示
-- [ ] フッターが正常に表示
-- [ ] レスポンシブ対応が完了
-- [ ] ダークモード切り替えが動作
-- [ ] 型チェックエラーが0件
+- ✅ ルートレイアウトが正常に動作
+- ✅ ThemeProviderが正しく設定されている
+- ✅ ヘッダーがグラスモーフィズムで表示
+- ✅ フッターが正常に表示
+- ✅ レスポンシブ対応が完了
+- ✅ ダークモード切り替えが動作
+- ✅ 型チェックエラーが0件
 
 ---
 
