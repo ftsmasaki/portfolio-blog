@@ -237,7 +237,7 @@ export const mapWordPressPostToDomain = (wpPost: unknown): E.Either<Error, Post>
 
 ---
 
-## フェーズ2.4: リポジトリ（ブログ・実績・タグ）の実装
+## ✅ フェーズ2.4: リポジトリ（ブログ・実績・タグ）の実装
 
 ### 目的
 WordPress APIを利用したリポジトリ実装
@@ -350,10 +350,10 @@ export const wpApiPostRepository: PostRepository = {
 ```
 
 ### 完了条件
-- [ ] ブログリポジトリが実装済み
-- [ ] 実績リポジトリが実装済み
-- [ ] タグリポジトリが実装済み
-- [ ] 型チェックエラーが0件
+- ✅ ブログリポジトリが実装済み
+- ✅ 実績リポジトリが実装済み
+- ✅ タグリポジトリが実装済み
+- ✅ 型チェックエラーが0件
 
 ---
 
