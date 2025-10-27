@@ -1,27 +1,37 @@
+import type {
+  PostId,
+  PostTitle,
+  PostSlug,
+  PostExcerpt,
+  PostDate,
+  ImageUrl,
+  AuthorName,
+  Email,
+} from "../value-objects";
 import type { Tag } from "../tags/entities";
 
 /**
  * ブログエンティティ
  */
 export interface Post {
-  id: number;
-  slug: string;
-  title: string;
-  content: string;
-  excerpt: string;
-  createdAt: Date;
-  updatedAt: Date;
-  featuredImage?: string;
-  tags: Tag[];
-  author: Author;
+  readonly id: PostId;
+  readonly title: PostTitle;
+  readonly slug: PostSlug;
+  readonly excerpt: PostExcerpt;
+  readonly content: string;
+  readonly createdAt: PostDate;
+  readonly updatedAt: PostDate;
+  readonly featuredImage?: ImageUrl;
+  readonly tags: Tag[];
+  readonly author: Author;
 }
 
 /**
  * 著者エンティティ
  */
 export interface Author {
-  id: number;
-  name: string;
-  email: string;
-  avatar?: string;
+  readonly id: number;
+  readonly name: AuthorName;
+  readonly email: Email;
+  readonly avatar?: ImageUrl;
 }

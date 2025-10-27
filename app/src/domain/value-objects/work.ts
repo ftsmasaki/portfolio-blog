@@ -39,6 +39,31 @@ export const createWorkTitle = (
 };
 
 /**
+ * 実績スラッグ値オブジェクト
+ */
+export interface WorkSlug {
+  readonly _tag: "WorkSlug";
+  readonly value: string;
+}
+
+/**
+ * 実績スラッグを作成するコンストラクタ関数
+ */
+export const createWorkSlug = (value: unknown): E.Either<string, WorkSlug> => {
+  if (
+    typeof value === "string" &&
+    value.length >= 1 &&
+    value.length <= 100 &&
+    /^[a-z0-9-]+$/.test(value)
+  ) {
+    return E.right({ _tag: "WorkSlug", value });
+  }
+  return E.left(
+    "無効なWorkSlug: 1-100文字で、小文字英数字とハイフンのみ使用可能です"
+  );
+};
+
+/**
  * 実績説明値オブジェクト
  */
 export interface WorkDescription {
