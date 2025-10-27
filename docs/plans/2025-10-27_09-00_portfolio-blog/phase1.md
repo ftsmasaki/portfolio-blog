@@ -256,7 +256,7 @@ export const unknownError = (error: unknown): AppError => ({ _tag: 'UnknownError
 
 ---
 
-## フェーズ1.3: fp-ts拡張機能の実装
+## ✅ フェーズ1.3: fp-ts拡張機能の実装
 
 ### 目的
 fp-tsの拡張機能を実装し、関数型プログラミングの基盤を整える
@@ -309,10 +309,10 @@ export const getOrElse = <A>(defaultValue: A) => (ma: TE.TaskEither<AppError, A>
 ```
 
 ### 完了条件
-- [ ] Either拡張機能が実装済み
-- [ ] TaskEither拡張機能が実装済み
-- [ ] Option拡張機能が実装済み
-- [ ] 型チェックエラーが0件
+- ✅ Either拡張機能が実装済み
+- ✅ TaskEither拡張機能が実装済み
+- ✅ Option拡張機能が実装済み
+- ✅ 型チェックエラーが0件
 
 ---
 
