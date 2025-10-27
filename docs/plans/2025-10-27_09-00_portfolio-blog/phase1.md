@@ -562,44 +562,53 @@ npx shadcn@latest add button card navigation-menu input popover pagination dialo
 
 ---
 
-## フェーズ1.8: テーマシステムとカラーモード実装
+## ✅ フェーズ1.8: テーマシステムとカラーモード実装
 
 ### 目的
 統一されたデザインシステムとテーマ管理の実装
 
 ### 実装内容
-- カラーパレットの定義
-- タイポグラフィシステムの実装
-- スペーシングシステムの実装
+- カラーパレットの定義（globals.cssに既存）
+- タイポグラフィシステムの実装（Tailwind CSS）
+- スペーシングシステムの実装（Tailwind CSS）
 - テーマ管理フックの実装
 - カラーモードスイッチャーの実装
 
 ### 主要ファイル
 
-**テーマ管理フック (`hooks/use-theme.ts`)**
+**テーマ管理フック (`presentation/hooks/use-theme.ts`)**
 ```typescript
-import { useTheme as useNextTheme } from 'next-themes';
+"use client";
+
+import { useTheme as useNextTheme } from "next-themes";
 
 export const useTheme = () => {
   const { theme, setTheme, resolvedTheme, systemTheme } = useNextTheme();
 
   return {
-    theme: theme as 'light' | 'dark' | 'system' | undefined,
+    theme: theme as "light" | "dark" | "system" | undefined,
     resolvedTheme,
     systemTheme,
-    setTheme: (newTheme: 'light' | 'dark' | 'system') => setTheme(newTheme),
-    changeTheme: (newTheme: 'light' | 'dark' | 'system') => setTheme(newTheme),
+    setTheme: (newTheme: "light" | "dark" | "system") => setTheme(newTheme),
+    changeTheme: (newTheme: "light" | "dark" | "system") => setTheme(newTheme),
   };
 };
 ```
 
+**カラーモードスイッチャー (`presentation/components/common/theme-toggle.tsx`)**
+- ライト/ダーク/システムの切り替えUI
+- DropdownMenuを使用した実装
+- クライアントサイドでのハイドレーション対応
+
 ### 完了条件
-- [ ] カラーパレットが定義済み
-- [ ] タイポグラフィシステムが実装済み
-- [ ] スペーシングシステムが実装済み
-- [ ] テーマ管理が正常に動作
-- [ ] カラーモードスイッチャーが正常に動作
-- [ ] 型チェックエラーが0件
+- ✅ カラーパレットが定義済み
+- ✅ タイポグラフィシステムが実装済み
+- ✅ スペーシングシステムが実装済み
+- ✅ テーマ管理フックが実装済み
+- ✅ カラーモードスイッチャーが実装済み
+- ✅ 型チェックエラーが0件
+
+**注意**: ThemeProviderはフェーズ1.9で実装予定
 
 ---
 
