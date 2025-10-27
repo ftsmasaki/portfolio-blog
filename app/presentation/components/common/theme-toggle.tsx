@@ -60,4 +60,3 @@ export function ThemeToggle({ className }: { className?: string }) {
     </DropdownMenu>
   );
 }
-

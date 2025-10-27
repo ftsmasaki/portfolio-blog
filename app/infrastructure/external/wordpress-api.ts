@@ -1,7 +1,10 @@
 import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/function";
 import { httpClient, type HttpError } from "@/infrastructure/http/client";
-import type { WordPressPost, WordPressTag } from "./types";
+import type {
+  WordPressPost,
+  WordPressTag,
+} from "@/infrastructure/external/types";
 
 /**
  * WordPress APIエラー型

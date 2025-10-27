@@ -1,6 +1,6 @@
 import type { TaskEither } from "fp-ts/TaskEither";
 import type { AppError } from "@/application/common/errors";
-import type { Post } from "./entities";
+import type { Post } from "@/domain/blog/entities";
 
 /**
  * ブログリポジトリのポート（インターフェース）

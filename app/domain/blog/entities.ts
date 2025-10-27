@@ -5,8 +5,8 @@ import type {
   PostExcerpt,
   PostDate,
   ImageUrl,
-} from "../value-objects";
-import type { Tag } from "../tags/entities";
+} from "@/domain/value-objects";
+import type { Tag } from "@/domain/tags/entities";
 
 /**
  * ブログエンティティ

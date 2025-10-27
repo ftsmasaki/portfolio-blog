@@ -1,6 +1,6 @@
 import type { TaskEither } from "fp-ts/TaskEither";
 import type { AppError } from "@/application/common/errors";
-import type { Tag } from "./entities";
+import type { Tag } from "@/domain/tags/entities";
 
 /**
  * タグリポジトリのポート（インターフェース）

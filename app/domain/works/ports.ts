@@ -1,6 +1,6 @@
 import type { TaskEither } from "fp-ts/TaskEither";
 import type { AppError } from "@/application/common/errors";
-import type { Work } from "./entities";
+import type { Work } from "@/domain/works/entities";
 
 /**
  * 実績リポジトリのポート（インターフェース）

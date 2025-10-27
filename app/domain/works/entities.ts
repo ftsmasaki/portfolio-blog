@@ -8,7 +8,7 @@ import type {
   GitHubUrl,
   LiveUrl,
   PostDate,
-} from "../value-objects";
+} from "@/domain/value-objects";
 
 /**
  * 実績エンティティ

@@ -1,4 +1,4 @@
-import type { TagId, TagName, TagSlug, TagCount } from "../value-objects";
+import type { TagId, TagName, TagSlug, TagCount } from "@/domain/value-objects";
 
 /**
  * タグエンティティ

@@ -1,7 +1,10 @@
 import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/function";
-import { WordPressPostSchema, type WordPressPost } from "./schemas";
-import type { ValidationError } from "../common/errors";
+import {
+  WordPressPostSchema,
+  type WordPressPost,
+} from "@/application/blog/schemas";
+import type { ValidationError } from "@/application/common/errors";
 
 /**
  * WordPress APIレスポンスをバリデーションする関数
