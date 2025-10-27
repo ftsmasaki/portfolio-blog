@@ -27,9 +27,9 @@ WordPress APIレスポンスのバリデーション実装
 - エラーハンドリング
 
 ### 完了条件
-- [ ] Zodスキーマが定義済み
-- [ ] バリデーション関数が実装済み
-- [ ] 型チェックエラーが0件
+- [x] Zodスキーマが定義済み
+- [x] バリデーション関数が実装済み
+- [x] 型チェックエラーが0件
 
 ---
 
@@ -297,7 +297,7 @@ export const Toc = ({ items }: TocProps) => {
                 item.level === 4 && 'ml-8'
               )}
             >
-              <ChevronRight className="h-4 w-4 mt-0.5 flex-shrink-0" />
+              <ChevronRight className="h-4 w-4 mt-0.5 shrink-0" />
               <span className="line-clamp-2">{item.text}</span>
             </button>
           </li>
