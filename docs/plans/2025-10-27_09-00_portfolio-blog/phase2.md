@@ -357,7 +357,7 @@ export const wpApiPostRepository: PostRepository = {
 
 ---
 
-## フェーズ2.5: React Query設定とQuery Keys定義
+## ✅ フェーズ2.5: React Query設定とQuery Keys定義
 
 ### 目的
 React Queryの設定とQuery Keys定義
@@ -414,10 +414,10 @@ export const queryKeys = {
 ```
 
 ### 完了条件
-- [ ] QueryClientが設定済み
-- [ ] Query Keysが定義済み
-- [ ] キャッシュ戦略が適切に設定
-- [ ] 型チェックエラーが0件
+- ✅ QueryClientが設定済み
+- ✅ Query Keysが定義済み
+- ✅ キャッシュ戦略が適切に設定
+- ✅ 型チェックエラーが0件
 
 ---
 
