@@ -464,7 +464,7 @@ export interface Tag {
 
 ---
 
-## フェーズ1.6: 共通ユーティリティ関数の実装
+## ✅ フェーズ1.6: 共通ユーティリティ関数の実装
 
 ### 目的
 共通で使用するユーティリティ関数の実装
@@ -489,11 +489,41 @@ export function cn(...inputs: ClassValue[]) {
 }
 ```
 
+**format ユーティリティ (`presentation/utils/format.ts`)**
+```typescript
+import { format, formatDistanceToNow } from 'date-fns';
+import { ja } from 'date-fns/locale';
+
+/**
+ * 日付をフォーマットする関数
+ */
+export const formatDate = (
+  date: Date,
+  formatStr: string = 'yyyy年MM月dd日'
+): string => {
+  return format(date, formatStr, { locale: ja });
+};
+
+/**
+ * 日付を相対的に表示する関数（例: "3日前"）
+ */
+export const getRelativeDate = (date: Date): string => {
+  return formatDistanceToNow(date, {
+    addSuffix: true,
+    locale: ja,
+  });
+};
+```
+
+**バリデーション関数**
+- ドメイン層（`domain/value-objects/validation.ts`）に実装済み
+- `validateRequired`, `validateMinLength`, `validateMaxLength`, `validateUrl`, `validateSlug` など
+
 ### 完了条件
-- [ ] cn関数が実装済み
-- [ ] フォーマット関数が実装済み
-- [ ] バリデーション関数が実装済み
-- [ ] 型チェックエラーが0件
+- ✅ cn関数が実装済み
+- ✅ フォーマット関数が実装済み
+- ✅ バリデーション関数が実装済み
+- ✅ 型チェックエラーが0件
 
 ---
 
