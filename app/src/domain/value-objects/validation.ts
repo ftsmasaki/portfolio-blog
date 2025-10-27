@@ -67,17 +67,6 @@ export const validateUrl = (value: string): E.Either<string, string> => {
 };
 
 /**
- * メールアドレスのバリデーション
- */
-export const validateEmail = (value: string): E.Either<string, string> => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (emailRegex.test(value)) {
-    return E.right(value);
-  }
-  return E.left("有効なメールアドレスの形式である必要があります");
-};
-
-/**
  * 正の整数のバリデーション
  */
 export const validatePositiveInteger = (

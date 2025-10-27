@@ -5,8 +5,6 @@ import type {
   PostExcerpt,
   PostDate,
   ImageUrl,
-  AuthorName,
-  Email,
 } from "../value-objects";
 import type { Tag } from "../tags/entities";
 
@@ -23,15 +21,4 @@ export interface Post {
   readonly updatedAt: PostDate;
   readonly featuredImage?: ImageUrl;
   readonly tags: Tag[];
-  readonly author: Author;
-}
-
-/**
- * 著者エンティティ
- */
-export interface Author {
-  readonly id: number;
-  readonly name: AuthorName;
-  readonly email: Email;
-  readonly avatar?: ImageUrl;
 }
