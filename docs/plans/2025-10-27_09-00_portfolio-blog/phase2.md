@@ -184,7 +184,7 @@ export const getWordPressPostBySlug = async (
 
 ---
 
-## フェーズ2.3: データマッパーの実装
+## ✅ フェーズ2.3: データマッパーの実装
 
 ### 目的
 WordPress APIレスポンスをドメインエンティティに変換するマッパーの実装
@@ -229,11 +229,11 @@ export const mapWordPressPostToDomain = (wpPost: unknown): E.Either<Error, Post>
 ```
 
 ### 完了条件
-- [ ] WordPress → Postマッパーが実装済み
-- [ ] WordPress → Workマッパーが実装済み
-- [ ] WordPress → Tagマッパーが実装済み
-- [ ] バリデーションが適切に実装
-- [ ] 型チェックエラーが0件
+- ✅ WordPress → Postマッパーが実装済み
+- ✅ WordPress → Workマッパーが実装済み
+- ✅ WordPress → Tagマッパーが実装済み
+- ✅ バリデーションが適切に実装
+- ✅ 型チェックエラーが0件
 
 ---
 

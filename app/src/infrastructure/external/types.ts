@@ -31,6 +31,7 @@ export interface WordPressPost {
         readonly name: string;
         readonly slug: string;
         readonly taxonomy: string;
+        readonly count?: number;
       }>
     >;
   };
