@@ -4,15 +4,15 @@
 UIコンポーネント、カスタムフック、Zustandストアの実装。
 
 ## サブフェーズ構成
-- **フェーズ4.1**: UIコンポーネント（Button/Card/GlassCard）の実装
-- **フェーズ4.2**: UIコンポーネント（Pagination）の実装
-- **フェーズ4.3**: カスタムフック（useTheme、useIntersection、useLocalStorage）の実装
-- **フェーズ4.4**: Zustandストアの実装
-- **フェーズ4.5**: ユーティリティ関数の実装
+- **✅ フェーズ4.1**: UIコンポーネント（Button/Card/GlassCard）の実装
+- **⌛ フェーズ4.2**: UIコンポーネント（Pagination）の実装
+- **⌛ フェーズ4.3**: カスタムフック（useTheme、useIntersection、useLocalStorage）の実装
+- **⌛ フェーズ4.4**: Zustandストアの実装
+- **⌛ フェーズ4.5**: ユーティリティ関数の実装
 
 ---
 
-## フェーズ4.1: UIコンポーネント（Button/Card/GlassCard）
+## ✅ フェーズ4.1: UIコンポーネント（Button/Card/GlassCard）
 
 ### 目的
 基本UIコンポーネントの実装
@@ -24,28 +24,28 @@ UIコンポーネント、カスタムフック、Zustandストアの実装。
 
 ### 主要ファイル
 
-**GlassCard (`presentation/components/ui/glass-card/glass-card.tsx`)**
+**GlassCard (`presentation/components/ui/glass-card.tsx`)**
 ```typescript
-import { cn } from '@/lib/utils/cn';
-import { forwardRef } from 'react';
+import * as React from "react";
+import { cn } from "@/presentation/utils";
 
-interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'blur' | 'frosted';
+export interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: "default" | "blur" | "frosted";
 }
 
-const GlassCard = forwardRef<HTMLDivElement, GlassCardProps>(
-  ({ className, variant = 'default', ...props }, ref) => {
+const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
+  ({ className, variant = "default", ...props }, ref) => {
     const variants = {
-      default: 'bg-white/10 backdrop-blur-md border-white/20',
-      blur: 'bg-white/5 backdrop-blur-lg border-white/10',
-      frosted: 'bg-white/20 backdrop-blur-sm border-white/30',
+      default: "bg-white/10 backdrop-blur-md border-white/20",
+      blur: "bg-white/5 backdrop-blur-lg border-white/10",
+      frosted: "bg-white/20 backdrop-blur-sm border-white/30",
     };
 
     return (
       <div
         ref={ref}
         className={cn(
-          'rounded-xl border shadow-lg',
+          "rounded-xl border shadow-lg",
           variants[variant],
           className
         )}
@@ -54,16 +54,16 @@ const GlassCard = forwardRef<HTMLDivElement, GlassCardProps>(
     );
   }
 );
-GlassCard.displayName = 'GlassCard';
+GlassCard.displayName = "GlassCard";
 
 export { GlassCard };
 ```
 
 ### 完了条件
-- [ ] Buttonコンポーネントが実装済み
-- [ ] Cardコンポーネントが実装済み
-- [ ] GlassCardコンポーネントが実装済み
-- [ ] 型チェックエラーが0件
+- ✅ Buttonコンポーネントが実装済み（既存）
+- ✅ Cardコンポーネントが実装済み（既存）
+- ✅ GlassCardコンポーネントが実装済み
+- ✅ 型チェックエラーが0件
 
 ---
 
@@ -74,11 +74,11 @@ export { GlassCard };
 
 ### 主要ファイル
 
-**Pagination (`presentation/components/ui/pagination/pagination.tsx`)**
+**Pagination (`presentation/components/ui/pagination.tsx`)**
 ```typescript
 import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils/cn';
+import { Button } from '@/presentation/components/ui/button';
+import { cn } from '@/presentation/utils/cn';
 
 interface PaginationProps {
   currentPage: number;
@@ -191,7 +191,7 @@ export const Pagination = ({
 
 ### 主要ファイル
 
-**useTheme (`presentation/hooks/use-theme.ts`)**
+**useTheme (`src/presentation/hooks/use-theme.ts`)**
 ```typescript
 import { useTheme as useNextTheme } from 'next-themes';
 
@@ -223,7 +223,7 @@ export const useTheme = () => {
 
 ### 主要ファイル
 
-**Theme Store (`presentation/store/theme-store.ts`)**
+**Theme Store (`src/presentation/store/theme-store.ts`)**
 ```typescript
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
@@ -272,7 +272,7 @@ export const useThemeStore = create<ThemeState>()(
 
 ### 主要ファイル
 
-**format (`presentation/utils/format.ts`)**
+**format (`src/presentation/utils/format.ts`)**
 ```typescript
 import { format, formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale/ja';
