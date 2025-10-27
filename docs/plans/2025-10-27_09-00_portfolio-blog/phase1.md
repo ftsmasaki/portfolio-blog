@@ -18,7 +18,7 @@ Next.js 16 + React 19 + TypeScript環境の構築と、bulletproof-react準拠�
 
 ---
 
-## フェーズ1.1: プロジェクト初期設定
+## ✅ フェーズ1.1: プロジェクト初期設定
 
 ### 目的
 Next.js 16 + React 19 + TypeScript環境の構築と必要なライブラリのインストール
@@ -75,13 +75,13 @@ npx shadcn@latest add button card navigation-menu input popover pagination dialo
 4. ユーティリティ関数の設定
 
 ### 完了条件
-- [ ] Next.js 16 + React 19 + TypeScript環境が動作
-- [ ] Tailwind CSS 4が正常に動作
-- [ ] ESLint + Prettierが正常に動作
-- [ ] ディレクトリ構成が作成済み
-- [ ] 必要なライブラリがインストール済み
-- [ ] shadcn/uiが初期化・設定済み
-- [ ] 型チェックエラーが0件
+- ✅ Next.js 16 + React 19 + TypeScript環境が動作
+- ✅ Tailwind CSS 4が正常に動作
+- ✅ ESLint + Prettierが正常に動作
+- ✅ ディレクトリ構成が作成済み
+- ✅ 必要なライブラリがインストール済み
+- ✅ shadcn/uiが初期化・設定済み
+- ✅ 型チェックエラーが0件
 
 ---
 
