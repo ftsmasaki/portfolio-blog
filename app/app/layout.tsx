@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import { QueryProvider } from "@/presentation/components/providers/query-provider";
 import { Header } from "@/presentation/components/common/header";
 import { Footer } from "@/presentation/components/common/footer";
 import "@/app/globals.css";
@@ -24,16 +25,18 @@ export default function RootLayout({
   return (
     <html lang="ja" suppressHydrationWarning>
       <body className={notoSansJP.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Header />
-          <main className="min-h-screen pt-16">{children}</main>
-          <Footer />
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Header />
+            <main className="min-h-screen pt-16">{children}</main>
+            <Footer />
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );
