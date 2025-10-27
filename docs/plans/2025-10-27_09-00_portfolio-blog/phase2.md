@@ -100,7 +100,7 @@ export const httpClient = {
 
 ---
 
-## フェーズ2.2: WordPress API連携の実装
+## ✅ フェーズ2.2: WordPress API連携の実装
 
 ### 目的
 WordPress REST APIとの連携機能の実装
@@ -176,11 +176,11 @@ export const getWordPressPostBySlug = async (
 ```
 
 ### 完了条件
-- [ ] WordPress APIクライアントが実装済み
-- [ ] 記事取得関数が正常に動作
-- [ ] 実績取得関数が正常に動作
-- [ ] タグ取得関数が正常に動作
-- [ ] 型チェックエラーが0件
+- ✅ WordPress APIクライアントが実装済み
+- ⏳ 記事取得関数が正常に動作（動作確認待ち）
+- ⏳ 実績取得関数が正常に動作（動作確認待ち）
+- ⏳ タグ取得関数が正常に動作（動作確認待ち）
+- ✅ 型チェックエラーが0件
 
 ---
 
