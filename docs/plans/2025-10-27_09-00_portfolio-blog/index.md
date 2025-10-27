@@ -93,16 +93,16 @@
 **注意**: テストファイルは各ディレクトリ内の`__tests__`ディレクトリに配置します。
 
 ```
-src/
+app/
 ├── app/                           # Next.js App Router (Presentation層)
-│   ├── (blog)/                   # ブログ機能のページグループ
+│   ├── blog/                      # ブログ機能のページ
 │   │   ├── page.tsx              # 記事一覧ページ
 │   │   ├── [slug]/page.tsx       # 記事詳細ページ
 │   │   └── search/page.tsx        # 検索結果ページ
-│   ├── (works)/                  # 実績機能のページグループ
+│   ├── works/                     # 実績機能のページ
 │   │   ├── page.tsx              # 実績一覧ページ
 │   │   └── [slug]/page.tsx       # 実績詳細ページ
-│   ├── (tags)/                   # タグ機能のページグループ
+│   ├── tags/                      # タグ機能のページ
 │   │   ├── page.tsx              # タグ一覧ページ
 │   │   └── [slug]/page.tsx       # タグ詳細ページ
 │   ├── about/page.tsx            # 自己紹介ページ
