@@ -85,7 +85,7 @@ npx shadcn@latest add button card navigation-menu input popover pagination dialo
 
 ---
 
-## フェーズ1.2: ディレクトリ構成と型定義作成
+## ✅ フェーズ1.2: ディレクトリ構成と型定義作成
 
 ### 目的
 bulletproof-react準拠のディレクトリ構成と基本的な型定義の作成
@@ -248,11 +248,11 @@ export const unknownError = (error: unknown): AppError => ({ _tag: 'UnknownError
 ```
 
 ### 完了条件
-- [ ] ページルート定数が実装済み（routes.ts）
-- [ ] ドメインエンティティの型定義が完了
-- [ ] ドメインポートの型定義が完了
-- [ ] アプリケーションエラー型が定義済み
-- [ ] 型チェックエラーが0件
+- ✅ ページルート定数が実装済み（routes.ts）
+- ✅ ドメインエンティティの型定義が完了
+- ✅ ドメインポートの型定義が完了
+- ✅ アプリケーションエラー型が定義済み
+- ✅ 型チェックエラーが0件
 
 ---
 
