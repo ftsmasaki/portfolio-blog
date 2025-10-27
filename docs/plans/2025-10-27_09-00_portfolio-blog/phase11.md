@@ -1,213 +1,165 @@
-# フェーズ11: デプロイと自動化実装
+# フェーズ11: アナリティクスと監視実装
 
 ## 概要
-GitHub Actions CI/CDパイプライン、WordPress Webhook自動デプロイ、環境変数とシークレット管理、本番環境デプロイの実装。
+GA4統合、カスタムイベント追跡、パフォーマンス監視の実装。
 
 ## サブフェーズ構成
-- **フェーズ11.1**: GitHub Actions CI/CDパイプラインの実装
-- **フェーズ11.2**: WordPress Webhook自動デプロイ機能の実装
-- **フェーズ11.3**: 環境変数とシークレット管理の設定
-- **フェーズ11.4**: 本番環境デプロイ設定
+- **フェーズ11.1**: GA4統合の実装
+- **フェーズ11.2**: カスタムイベント追跡の実装
+- **フェーズ11.3**: パフォーマンス監視の実装
 
 ---
 
-## フェーズ11.1: GitHub Actions CI/CDパイプラインの実装
+## フェーズ11.1: GA4統合の実装
 
 ### 目的
-GitHub Actionsを使用したCI/CDパイプラインの実装
+Google Analytics 4 の統合実装
 
 ### 実装内容
-- CI/CDワークフローの実装
-- ビルドとテストの自動化
-- デプロイの自動化
-
-### 完了条件
-- [ ] CI/CDパイプラインが実装済み
-- [ ] ビルドが自動化済み
-- [ ] テストが自動化済み
-- [ ] デプロイが自動化済み
-
----
-
-## フェーズ11.2: WordPress Webhook自動デプロイ機能の実装
-
-### 目的
-WordPress管理画面からの投稿でNext.jsアプリを自動ビルド・デプロイ
-
-### 実装内容
-- WordPress Webhook受信APIの実装
-- GitHub Actionsワークフローの実装
-- Webhookの検証機能
+- GA4コンポーネントの実装
+- 環境変数の設定
+- ルートレイアウトへの統合
 
 ### 主要ファイル
 
-**WordPress Webhook受信API (`app/api/webhook/route.ts`)**
+**Analytics コンポーネント (`presentation/components/common/analytics.tsx`)**
 ```typescript
-import { NextResponse } from 'next/server';
-import { pipe } from 'fp-ts/function';
-import * as E from 'fp-ts/Either';
+'use client';
+
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 /**
- * Webhookペイロードの型定義
+ * Google Analytics 4 コンポーネント
+ * 本番環境でのみ有効化
  */
-interface WebhookPayload {
-  type: string;
-  post_id: number;
-  post_type: string;
-  timestamp: string;
-}
+export const Analytics = () => {
+  const gaId = process.env.NEXT_PUBLIC_GA_ID;
 
-/**
- * POSTハンドラー: WordPress Webhookを受信
- */
-export async function POST(request: Request) {
-  const secret = request.headers.get('x-webhook-secret');
-  const expectedSecret = process.env.WORDPRESS_WEBHOOK_SECRET;
-
-  if (secret !== expectedSecret) {
-    return NextResponse.json(
-      { error: 'Unauthorized' },
-      { status: 401 }
-    );
+  // 開発環境ではGA4を無効化
+  if (!gaId || process.env.NODE_ENV === 'development') {
+    return null;
   }
 
-  let payload: WebhookPayload;
-  try {
-    payload = await request.json();
-  } catch (error) {
-    return NextResponse.json(
-      { error: 'Invalid JSON' },
-      { status: 400 }
-    );
-  }
-
-  // GitHub Actionsのビルドをトリガー
-  const repository = process.env.GITHUB_REPOSITORY;
-  const token = process.env.GITHUB_TOKEN;
-
-  try {
-    const response = await fetch(
-      `https://api.github.com/repos/${repository}/dispatches`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/vnd.github.v3+json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          event_type: 'wordpress_updated',
-          client_payload: {
-            timestamp: new Date().toISOString(),
-            source: 'wordpress',
-          },
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`GitHub API error: ${response.status}`);
-    }
-
-    return NextResponse.json({
-      success: true,
-      message: 'Build triggered successfully',
-      payload,
-    });
-  } catch (error) {
-    return NextResponse.json(
-      { error: 'Build trigger failed' },
-      { status: 500 }
-    );
-  }
-}
+  return <GoogleAnalytics gaId={gaId} />;
+};
 ```
 
-**GitHub Actions Workflow (`.github/workflows/build-on-wordpress-update.yml`)**
-```yaml
-name: Build and Deploy on WordPress Update
-
-on:
-  repository_dispatch:
-    types: [wordpress_updated]
-  workflow_dispatch:
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Build Next.js
-        run: npm run build
-        env:
-          WORDPRESS_URL: ${{ secrets.WORDPRESS_URL }}
-```
+### GA4設定手順
+1. Google Analytics 4でプロパティ作成
+   - Google Analyticsにアクセス
+   - 「管理」→「プロパティを作成」
+   - 測定ID（G-XXXXXXXXXX）を取得
+2. 環境変数の設定
+   - `.env.local`ファイルを作成
+   - `NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX`を追加
+3. 本番環境での確認
+   - 本番環境でGA4が正常に動作することを確認
 
 ### 完了条件
-- [ ] Webhook受信APIが実装済み
-- [ ] GitHub Actionsワークフローが設定済み
-- [ ] 自動デプロイが正常に動作
+- [ ] GA4コンポーネントが実装済み
+- [ ] ルートレイアウトに統合済み
+- [ ] 本番環境で正常に動作
 - [ ] 型チェックエラーが0件
 
 ---
 
-## フェーズ11.3: 環境変数とシークレット管理の設定
+## フェーズ11.2: カスタムイベント追跡の実装
 
 ### 目的
-環境変数とシークレット管理の設定
+カスタムイベント追跡機能の実装
 
 ### 実装内容
-- 環境変数の設定
-- GitHub Secretsの設定
-- Vercel環境変数の設定
+- 記事閲覧の追跡
+- 実績閲覧の追跡
+- リンククリックの追跡
+
+### 主要ファイル
+
+**Analytics ユーティリティ (`presentation/utils/analytics.ts`)**
+```typescript
+/**
+ * グローバル型定義を拡張
+ */
+declare global {
+  interface Window {
+    gtag?: (
+      command: string,
+      targetId: string,
+      config?: Record<string, any>
+    ) => void;
+  }
+}
+
+/**
+ * GA4カスタムイベントを送信
+ */
+export const trackEvent = (
+  eventName: string,
+  params?: Record<string, string | number | boolean>
+) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', eventName, params);
+  }
+};
+
+/**
+ * 記事閲覧を追跡
+ */
+export const trackPostView = (slug: string, title: string) => {
+  trackEvent('view_blog_post', {
+    post_slug: slug,
+    post_title: title,
+  });
+};
+
+/**
+ * 実績閲覧を追跡
+ */
+export const trackWorkView = (slug: string, title: string) => {
+  trackEvent('view_work', {
+    work_slug: slug,
+    work_title: title,
+  });
+};
+```
 
 ### 完了条件
-- [ ] 環境変数が設定済み
-- [ ] GitHub Secretsが設定済み
-- [ ] Vercel環境変数が設定済み
-
----
-
-## フェーズ11.4: 本番環境デプロイ設定
-
-### 目的
-本番環境へのデプロイ設定
-
-### 実装内容
-- デプロイ設定の実装
-- 本番環境の設定
-- 監視設定の実装
-
-### 完了条件
-- [ ] デプロイ設定が完了
-- [ ] 本番環境が設定済み
-- [ ] 監視設定が実装済み
+- [ ] カスタムイベント追跡が実装済み
+- [ ] 記事閲覧が追跡される
+- [ ] 実績閲覧が追跡される
 - [ ] 型チェックエラーが0件
 
 ---
 
-## フェーズ11全体の完了条件
+## フェーズ11.3: パフォーマンス監視の実装
+
+### 目的
+パフォーマンス監視機能の実装
+
+### 実装内容
+- Web Vitals の監視
+- パフォーマンス指標の測定
+- エラートラッキング
+
+### 完了条件
+- [ ] パフォーマンス監視が実装済み
+- [ ] Web Vitalsが測定される
+- [ ] エラートラッキングが動作
+- [ ] 型チェックエラーが0件
+
+---
+
+## フェーズ10全体の完了条件
 
 ### 技術指標
 - [ ] 型チェックエラーが0件
-- [ ] CI/CDパイプラインが動作
+- [ ] GA4が実装済み
 
 ### 機能指標
-- [ ] 自動デプロイが正常に動作
-- [ ] Webhookが正常に動作
+- [ ] GA4が正常に動作
+- [ ] カスタムイベントが記録される
+- [ ] パフォーマンス監視が動作
 
 ### 次のフェーズ
-**フェーズ12: テスト実装** に進む
+**フェーズ12: デプロイと自動化実装** に進む
 

@@ -1,210 +1,137 @@
-# フェーズ9: 最適化とSEO実装
+# フェーズ9: トップページ実装
 
 ## 概要
-サイトのパフォーマンス最適化、画像最適化、コード分割、SEOメタタグと構造化データ、サイトマップの実装。
+ヒーローセクション、最新記事5件の表示機能を実装。
 
 ## サブフェーズ構成
-- **フェーズ9.1**: 画像最適化とコード分割の実装
-- **フェーズ9.2**: React Queryキャッシュ戦略の実装
-- **フェーズ9.3**: SEOメタタグと構造化データの実装
-- **フェーズ9.4**: サイトマップとrobots.txtの実装
+- **フェーズ9.1**: トップページの基本実装
+- **フェーズ9.2**: 最新記事5件の表示実装
 
 ---
 
-## フェーズ9.1: 画像最適化とコード分割の実装
+## フェーズ9.1: トップページの基本実装
 
 ### 目的
-サイトのパフォーマンス最適化
+トップページの基本構造とヒーローセクションの実装
 
 ### 実装内容
-- 画像最適化の実装
-- コード分割の実装
-- パフォーマンス監視の実装
-
-### 完了条件
-- [ ] 画像が最適化済み
-- [ ] コード分割が実装済み
-- [ ] パフォーマンスが最適化済み
-- [ ] 型チェックエラーが0件
-
----
-
-## フェーズ9.2: React Queryキャッシュ戦略の実装
-
-### 目的
-React Queryキャッシュ戦略の実装
-
-### 実装内容
-- キャッシュ戦略の最適化
-- キャッシュ期限の設定
-- リフェッチ戦略の設定
-
-### 完了条件
-- [ ] React Queryキャッシュが適切に動作
-- [ ] キャッシュ戦略が最適化済み
-- [ ] 型チェックエラーが0件
-
----
-
-## フェーズ9.3: SEOメタタグと構造化データの実装
-
-### 目的
-SEOメタタグと構造化データの実装
-
-### 実装内容
-- メタタグの最適化
-- 構造化データの実装
-- Open Graphタグの実装
-- Twitter Cardタグの実装
+- ヒーローセクション
+- 自己紹介ページへのリンク
+- ブログ一覧ページへのリンク
 
 ### 主要ファイル
 
-**SEOユーティリティ (`presentation/utils/seo.ts`)**
+**トップページ (`app/page.tsx`)**
 ```typescript
-import type { Metadata } from 'next';
-import type { Post } from '@/domain/blog/entities';
-import type { Work } from '@/domain/works/entities';
-import { BLOG_ROUTES, WORK_ROUTES } from '@/shared/constants/routes';
+import { Link } from "@/presentation/components/common/navigation";
+import { Button } from "@/presentation/components/ui/button";
+import { Card } from "@/presentation/components/ui/card";
 
-/**
- * 記事用のSEOメタデータを生成
- */
-export const generatePostMetadata = (post: Post): Metadata => {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com';
-  
-  return {
-    title: post.title,
-    description: post.excerpt,
-    openGraph: {
-      title: post.title,
-      description: post.excerpt,
-      type: 'article',
-      publishedTime: post.createdAt.toISOString(),
-      modifiedTime: post.updatedAt.toISOString(),
-      images: post.featuredImage 
-        ? [{ url: `${siteUrl}${post.featuredImage}` }]
-        : [],
-      siteName: 'Portfolio Blog',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: post.title,
-      description: post.excerpt,
-    },
-    alternates: {
-      canonical: BLOG_ROUTES.POST(post.slug),
-    },
-  };
-};
-
-/**
- * 構造化データ（JSON-LD）を生成
- */
-export const generateArticleStructuredData = (post: Post) => {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com';
-  
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: post.title,
-    description: post.excerpt,
-    image: post.featuredImage ? `${siteUrl}${post.featuredImage}` : undefined,
-    datePublished: post.createdAt.toISOString(),
-    dateModified: post.updatedAt.toISOString(),
-  };
-};
+export default function HomePage() {
+  return (
+    <main className="container mx-auto px-4 py-12">
+      {/* ヒーローセクション */}
+      <section className="text-center py-20">
+        <h1 className="text-5xl font-bold mb-4">ポートフォリオブログ</h1>
+        <p className="text-xl text-muted-foreground mb-8">
+          スキルと実績を紹介するブログサイト
+        </p>
+        <div className="flex gap-4 justify-center">
+          <Button asChild>
+            <Link href="/about">自己紹介を見る</Link>
+          </Button>
+          <Button variant="outline" asChild>
+            <Link href="/blog">ブログを見る</Link>
+          </Button>
+        </div>
+      </section>
+    </main>
+  );
+}
 ```
 
 ### 完了条件
-- [ ] メタタグが最適化済み
-- [ ] 構造化データが実装済み
-- [ ] Open Graphタグが実装済み
-- [ ] Twitter Cardタグが実装済み
+- [ ] トップページが実装済み
+- [ ] ヒーローセクションが表示される
+- [ ] リンクが正常に動作
 - [ ] 型チェックエラーが0件
 
 ---
 
-## フェーズ9.4: サイトマップとrobots.txtの実装
+## フェーズ9.2: 最新記事5件の表示実装
 
 ### 目的
-サイトマップとrobots.txtの実装
+最新記事5件を表示する機能の実装
 
 ### 実装内容
-- サイトマップの生成
-- robots.txtの設定
+- 最新記事の取得
+- 記事カードの表示
+- 記事一覧ページへのリンク
 
 ### 主要ファイル
 
-**サイトマップ生成 (`app/sitemap.ts`)**
+**最新記事セクション (`presentation/components/home/recent-posts.tsx`)**
 ```typescript
-import type { MetadataRoute } from 'next';
-import { getAllPosts } from '@/application/di/usecases';
-import { BLOG_ROUTES, WORK_ROUTES, COMMON_ROUTES } from '@/shared/constants/routes';
+import { Link } from "@/presentation/components/common/navigation";
+import { Card } from "@/presentation/components/ui/card";
+import { usePosts } from "@/infrastructure/query/hooks/use-posts";
+import { formatDate } from "@/presentation/utils/format";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com';
+export const RecentPosts = () => {
+  const { data } = usePosts({ perPage: 5 });
   
-  // 基本ページ
-  const routes: MetadataRoute.Sitemap = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}${BLOG_ROUTES.INDEX}`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}${WORK_ROUTES.INDEX}`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-  ];
-  
-  // 記事ページ
-  const posts = await getAllPosts()();
-  if (posts._tag === 'right') {
-    const postRoutes: MetadataRoute.Sitemap = posts.right.map((post) => ({
-      url: `${baseUrl}${BLOG_ROUTES.POST(post.slug)}`,
-      lastModified: post.updatedAt,
-      changeFrequency: 'weekly' as const,
-      priority: 0.7,
-    }));
-    routes.push(...postRoutes);
+  if (!data || data.length === 0) {
+    return null;
   }
-  
-  return routes;
-}
-```
 
-**robots.txt生成 (`app/robots.ts`)**
-```typescript
-import type { MetadataRoute } from 'next';
-
-export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com';
-  
-  return {
-    rules: [
-      {
-        userAgent: '*',
-        allow: '/',
-        disallow: ['/api/', '/admin/'],
-      },
-    ],
-    sitemap: `${baseUrl}/sitemap.xml`,
-  };
-}
+  return (
+    <section className="container mx-auto px-4 py-12">
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-3xl font-bold">最新記事</h2>
+        <Link href="/blog" className="text-primary hover:underline">
+          すべて見る →
+        </Link>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {data.map((post) => (
+          <Card key={post.id} className="overflow-hidden">
+            <Link href={`/blog/${post.slug}`}>
+              {post.featuredImage && (
+                <img
+                  src={post.featuredImage}
+                  alt={post.title}
+                  className="w-full h-48 object-cover"
+                />
+              )}
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
+                <p className="text-muted-foreground mb-4">{post.excerpt}</p>
+                <div className="flex items-center justify-between text-sm">
+                  <time dateTime={post.createdAt.toISOString()}>
+                    {formatDate(post.createdAt)}
+                  </time>
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="text-primary hover:underline"
+                  >
+                    続きを読む →
+                  </Link>
+                </div>
+              </div>
+            </Link>
+          </Card>
+        ))}
+      </div>
+    </section>
+  );
+};
 ```
 
 ### 完了条件
-- [ ] サイトマップが生成済み
-- [ ] robots.txtが設定済み
+- [ ] 最新記事5件が表示される
+- [ ] 記事カードが正常に表示
+- [ ] リンクが正常に動作
 - [ ] 型チェックエラーが0件
 
 ---
@@ -213,14 +140,13 @@ export default function robots(): MetadataRoute.Robots {
 
 ### 技術指標
 - [ ] 型チェックエラーが0件
-- [ ] 全ての機能が実装済み
+- [ ] トップページが実装済み
+- [ ] 最新記事が表示される
 
 ### 機能指標
-- [ ] 画像が最適化済み
-- [ ] React Queryキャッシュが適切に動作
-- [ ] SEOが最適化されている
-- [ ] サイトマップが生成済み
+- [ ] ヒーローセクションが正常に表示
+- [ ] リンクが正常に動作
+- [ ] 最新記事が正常に表示
 
 ### 次のフェーズ
-**フェーズ10: アナリティクスと監視実装** に進む
-
+**フェーズ10: 最適化とSEO実装** に進む
