@@ -13,4 +13,8 @@ export {
   getInlineCodeStyles,
   getTableStyles,
 } from "./prose-styles";
-export type { TableElementType } from "./prose-styles";
+export type {
+  HeadingLevel,
+  ListType,
+  TableElementType,
+} from "./prose-styles";
