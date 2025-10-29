@@ -12,10 +12,31 @@ import { debugDomainEntity } from "@/infrastructure/utils/debug";
 import { htmlToReactElement } from "@/infrastructure/utils/html-to-react";
 import * as React from "react";
 
+// ISR設定: 1時間ごとに再生成
+export const revalidate = 3600;
+
 interface PageProps {
   params: Promise<{
     slug: string;
   }>;
+}
+
+/**
+ * ビルド時に全ての記事のスラッグをプリフェッチ
+ * generateStaticParamsで各記事ページを静的生成
+ */
+export async function generateStaticParams() {
+  const postsResult = await getPosts()();
+
+  if (postsResult._tag === "Left") {
+    // エラー時は空配列を返して動的生成にフォールバック
+    return [];
+  }
+
+  const posts = postsResult.right;
+  return posts.map(post => ({
+    slug: post.slug.value,
+  }));
 }
 
 export async function generateMetadata({ params }: PageProps) {

@@ -6,6 +6,9 @@ import Link from "next/link";
 import { TAG_ROUTES } from "@/shared/constants/routes";
 import { debugDomainEntity } from "@/infrastructure/utils/debug";
 
+// ISR設定: 1時間ごとに再生成
+export const revalidate = 3600;
+
 export const metadata = {
   title: "ブログ",
   description: "ブログ記事一覧",

@@ -13,7 +13,7 @@ WordPress REST APIからのデータ取得とブログ記事の表示機能を�
 - **フェーズ5.7**: 共有ボタン機能の実装
 - **フェーズ5.8**: Shared Element Transitionの実装
 - **フェーズ5.9**: タグ機能の実装
-- **フェーズ5.10**: オンデマンドISR対応
+- ✅ **フェーズ5.10**: オンデマンドISR対応
 
 ---
 
@@ -667,10 +667,10 @@ export default async function TagsPage() {
 ### 完了条件
 - ✅ ブログ記事一覧ページでISRが有効化
 - ✅ ブログ記事詳細ページでISRが有効化
-- ✅ タグ一覧ページでISRが有効化
-- ✅ タグ詳細ページでISRが有効化
+- ⏳ タグ一覧ページでISRが有効化（フェーズ5.9で実装予定）
+- ⏳ タグ詳細ページでISRが有効化（フェーズ5.9で実装予定）
 - ✅ generateStaticParamsが実装済み（詳細ページのみ）
-- ✅ WordPress更新時に自動再生成される
+- ✅ WordPress更新時に自動再生成される（既存のOn-Demand Revalidation APIと連携済み）
 - ✅ 型チェックエラーが0件
 
 ---
