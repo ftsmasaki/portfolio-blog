@@ -1,6 +1,7 @@
 import { getPosts, getPostBySlug } from "@/application/di/usecases";
 import { extractRelatedPosts } from "@/application/services";
 import { PostCard } from "@/presentation/components/blog/post-card";
+import { EnhancedCodeBlock } from "@/presentation/components/blog/enhanced-code-block";
 import type { Post } from "@/domain/blog/entities";
 import Link from "next/link";
 import { formatDate } from "@/presentation/utils/format";
@@ -8,6 +9,8 @@ import { TAG_ROUTES } from "@/shared/constants/routes";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { debugDomainEntity } from "@/infrastructure/utils/debug";
+import { htmlToReactElement } from "@/infrastructure/utils/html-to-react";
+import * as React from "react";
 
 interface PageProps {
   params: Promise<{
@@ -61,6 +64,23 @@ export default async function BlogPostPage({ params }: PageProps) {
       slug: tag.slug.value,
       count: tag.count.value,
     })),
+  });
+
+  // HTMLをReactElementに変換（コードブロックのシンタックスハイライトを含む）
+  // 副作用を持つコンポーネントはここで注入し、純粋関数から分離
+  const contentElement = await htmlToReactElement(post.content, {
+    pre: (props: any) => {
+      const dataLanguage = props["data-language"];
+      // rehype-pretty-codeで処理されたコードブロックの場合
+      if (dataLanguage) {
+        return React.createElement(EnhancedCodeBlock, {
+          ...props,
+          "data-language": dataLanguage,
+        });
+      }
+      // 通常のpre要素の場合
+      return React.createElement("pre", props);
+    },
   });
 
   // 関連記事取得（全記事を取得して抽出）
@@ -124,10 +144,9 @@ export default async function BlogPostPage({ params }: PageProps) {
       )}
 
       {/* 本文 */}
-      <div
-        className="prose prose-slate dark:prose-invert max-w-none mb-8"
-        dangerouslySetInnerHTML={{ __html: post.content }}
-      />
+      <div className="prose prose-slate dark:prose-invert max-w-none mb-8">
+        {contentElement}
+      </div>
 
       {/* 関連記事 */}
       {relatedPosts.length > 0 && (
