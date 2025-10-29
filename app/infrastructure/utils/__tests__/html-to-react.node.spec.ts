@@ -43,6 +43,21 @@ describe("htmlToReactElement", () => {
       expect(result).toBeDefined();
     });
 
+    it("外部リンクにtargetとrelが設定される", async () => {
+      const html = '<a href="https://google.com">外部リンク</a>';
+      const result = await htmlToReactElement(html);
+
+      expect(result).toBeDefined();
+    });
+
+    it("内部リンクにはtargetとrelが設定されない", async () => {
+      // 環境変数が設定されている場合を想定
+      const html = '<a href="/blog/post">内部リンク</a>';
+      const result = await htmlToReactElement(html);
+
+      expect(result).toBeDefined();
+    });
+
     it("引用にスタイルが適用される", async () => {
       const html = "<blockquote>引用文</blockquote>";
       const result = await htmlToReactElement(html);

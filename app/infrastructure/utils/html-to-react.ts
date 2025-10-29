@@ -24,6 +24,7 @@ import {
   getTableStyles,
 } from "@/presentation/utils/prose-styles";
 import { cn } from "@/presentation/utils/cn";
+import { transformLinkAttributes } from "./transform-link-attributes";
 
 /**
  * WordPressのコードブロックに言語クラスを追加する前処理（純粋関数）
@@ -217,8 +218,11 @@ export const htmlToReactElement = async (
     },
     // リンク
     a: (props: any) => {
+      const href = props.href || "";
+      const externalAttributes = transformLinkAttributes(href);
       return React.createElement("a", {
         ...props,
+        ...externalAttributes,
         className: cn(props.className, getLinkStyles()),
       });
     },
