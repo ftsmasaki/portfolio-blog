@@ -5,4 +5,7 @@ export {
   getParagraphStyles,
   getListStyles,
   getListItemStyles,
+  getLinkStyles,
+  getQuoteStyles,
+  getImageStyles,
 } from "./prose-styles";

@@ -108,3 +108,57 @@ export const getListStyles = (type: ListType): string => {
 export const getListItemStyles = (): string => {
   return "leading-7 text-foreground";
 };
+
+/**
+ * リンクタグに適用するスタイルクラスを返す純粋関数
+ *
+ * リンクの色、ホバー効果、下線を設定する。
+ * 外部リンクの判定は後段の処理で行うため、ここでは基本スタイルのみ返す。
+ *
+ * @returns Tailwind CSSクラス文字列
+ *
+ * @example
+ * ```typescript
+ * const styles = getLinkStyles();
+ * // 結果: "text-primary underline-offset-4 hover:underline transition-colors"
+ * ```
+ */
+export const getLinkStyles = (): string => {
+  return "text-primary underline-offset-4 hover:underline transition-colors";
+};
+
+/**
+ * 引用タグに適用するスタイルクラスを返す純粋関数
+ *
+ * 左ボーダー、背景色、イタリック、余白を設定する。
+ * Zenn風の引用デザインを参考にした実装。
+ *
+ * @returns Tailwind CSSクラス文字列
+ *
+ * @example
+ * ```typescript
+ * const styles = getQuoteStyles();
+ * // 結果: "border-l-4 border-primary pl-4 py-2 my-6 italic bg-muted/50 text-muted-foreground"
+ * ```
+ */
+export const getQuoteStyles = (): string => {
+  return "border-l-4 border-primary pl-4 py-2 my-6 italic bg-muted/50 text-muted-foreground";
+};
+
+/**
+ * 画像タグに適用するスタイルクラスを返す純粋関数
+ *
+ * レスポンシブ対応、角丸、余白、最大幅を設定する。
+ * Next.jsのImageコンポーネントと組み合わせて使用する。
+ *
+ * @returns Tailwind CSSクラス文字列
+ *
+ * @example
+ * ```typescript
+ * const styles = getImageStyles();
+ * // 結果: "rounded-lg my-6 max-w-full h-auto"
+ * ```
+ */
+export const getImageStyles = (): string => {
+  return "rounded-lg my-6 max-w-full h-auto";
+};

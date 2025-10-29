@@ -4,6 +4,9 @@ import {
   getParagraphStyles,
   getListStyles,
   getListItemStyles,
+  getLinkStyles,
+  getQuoteStyles,
+  getImageStyles,
 } from "../prose-styles";
 
 describe("prose-styles", () => {
@@ -105,6 +108,71 @@ describe("prose-styles", () => {
     it("同じ入力に対して常に同じ出力を返す（純粋関数）", () => {
       const result1 = getListItemStyles();
       const result2 = getListItemStyles();
+      expect(result1).toBe(result2);
+    });
+  });
+
+  describe("getLinkStyles", () => {
+    it("正しいスタイルを返す", () => {
+      const result = getLinkStyles();
+      expect(result).toContain("text-primary");
+      expect(result).toContain("hover:underline");
+      expect(result).toContain("transition-colors");
+      expect(result).toContain("underline-offset-4");
+    });
+
+    it("同じ入力に対して常に同じ出力を返す（純粋関数）", () => {
+      const result1 = getLinkStyles();
+      const result2 = getLinkStyles();
+      expect(result1).toBe(result2);
+    });
+  });
+
+  describe("getQuoteStyles", () => {
+    it("正しいスタイルを返す", () => {
+      const result = getQuoteStyles();
+      expect(result).toContain("border-l-4");
+      expect(result).toContain("border-primary");
+      expect(result).toContain("italic");
+      expect(result).toContain("bg-muted/50");
+      expect(result).toContain("text-muted-foreground");
+    });
+
+    it("適切な余白が設定される", () => {
+      const result = getQuoteStyles();
+      expect(result).toContain("pl-4");
+      expect(result).toContain("py-2");
+      expect(result).toContain("my-6");
+    });
+
+    it("同じ入力に対して常に同じ出力を返す（純粋関数）", () => {
+      const result1 = getQuoteStyles();
+      const result2 = getQuoteStyles();
+      expect(result1).toBe(result2);
+    });
+  });
+
+  describe("getImageStyles", () => {
+    it("正しいスタイルを返す", () => {
+      const result = getImageStyles();
+      expect(result).toContain("rounded-lg");
+      expect(result).toContain("max-w-full");
+      expect(result).toContain("h-auto");
+    });
+
+    it("レスポンシブ対応が含まれる", () => {
+      const result = getImageStyles();
+      expect(result).toContain("max-w-full");
+    });
+
+    it("適切な余白が設定される", () => {
+      const result = getImageStyles();
+      expect(result).toContain("my-6");
+    });
+
+    it("同じ入力に対して常に同じ出力を返す（純粋関数）", () => {
+      const result1 = getImageStyles();
+      const result2 = getImageStyles();
       expect(result1).toBe(result2);
     });
   });
