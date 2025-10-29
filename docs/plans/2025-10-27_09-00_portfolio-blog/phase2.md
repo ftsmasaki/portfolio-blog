@@ -10,6 +10,7 @@ WordPress REST APIを利用したデータ取得機能、リポジトリ実装�
 - **フェーズ2.4**: リポジトリ（ブログ、事績、タグ）の実装
 - **フェーズ2.5**: React Query設定とQuery Keys定義
 - **フェーズ2.6**: エラーハンドリングとバリデーション実装
+- **フェーズ2.7**: オンデマンドISR対応
 
 ---
 
@@ -491,6 +492,127 @@ export type Post = z.infer<typeof PostSchema>;
 - ✅ エラーハンドリングが適切
 - ✅ バリデーションが適切（値オブジェクトによる）
 
+---
+
+## フェーズ2.7: オンデマンドISR対応
+
+### 目的
+WordPress管理画面での更新をほぼリアルタイムで反映するオンデマンドISR機能の実装
+
+### 実装内容
+- On-Demand Revalidation API（`/api/revalidate`）の実装
+- WordPress On-Demand Revalidationプラグインとの連携
+- セキュリティトークンの設定
+
+### 主要ファイル
+
+**On-Demand Revalidation API (`app/api/revalidate/route.ts`)**
+```typescript
+import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath, revalidateTag } from 'next/cache';
+
+/**
+ * WordPress On-Demand RevalidationプラグインからのWebhookを受信
+ * 記事の追加・更新・削除時にNext.jsのキャッシュを無効化
+ */
+export async function POST(request: NextRequest) {
+  // セキュリティトークンの検証
+  const secret = request.headers.get('x-revalidate-secret');
+  const expectedSecret = process.env.REVALIDATE_SECRET;
+
+  if (secret !== expectedSecret) {
+    return NextResponse.json(
+      { error: 'Unauthorized' },
+      { status: 401 }
+    );
+  }
+
+  try {
+    const body = await request.json();
+    const { type, path, tag } = body;
+
+    // パスベースのリアバリデーション
+    if (path) {
+      revalidatePath(path);
+      console.log(`Revalidated path: ${path}`);
+    }
+
+    // タグベースのリアバリデーション
+    if (tag) {
+      revalidateTag(tag);
+      console.log(`Revalidated tag: ${tag}`);
+    }
+
+    // 型に応じたリアバリデーション
+    if (type === 'post') {
+      revalidatePath('/blog');
+      revalidatePath('/blog/[slug]', 'page');
+      revalidatePath('/');
+      revalidateTag('posts');
+    } else if (type === 'work') {
+      revalidatePath('/works');
+      revalidatePath('/works/[slug]', 'page');
+      revalidateTag('works');
+    } else if (type === 'tag') {
+      revalidatePath('/tags');
+      revalidatePath('/blog');
+      revalidateTag('tags');
+    }
+
+    return NextResponse.json({ 
+      revalidated: true, 
+      message: 'Cache revalidated successfully',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Revalidation error:', error);
+    return NextResponse.json(
+      { error: 'Error revalidating cache', details: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    );
+  }
+}
+```
+
+### 環境変数設定
+
+**.env.local**
+```env
+# On-Demand Revalidation
+REVALIDATE_SECRET=your-secret-token-here
+```
+
+### WordPress On-Demand Revalidationプラグイン設定
+
+WordPress管理画面でプラグインを有効化し、以下の設定を行う：
+- Webhook URL: `https://your-domain.com/api/revalidate`
+- Secret Token: 環境変数 `REVALIDATE_SECRET` と同じ値
+- トリガー: 投稿の公開/更新/削除時
+
+### 完了条件
+- ✅ On-Demand Revalidation APIが実装済み
+- ✅ セキュリティトークンによる認証が実装済み
+- ✅ 型チェックエラーが0件
+
 ### 次のフェーズ
 **フェーズ3: アプリケーション層実装** に進む
+
+---
+
+## フェーズ2全体の完了条件
+
+### 技術指標
+- ✅ 型チェックエラーが0件
+- ✅ HTTPクライアントが実装済み
+- ✅ WordPress API連携が実装済み
+- ✅ React Query設定が実装済み
+- ✅ エラーハンドリングが実装済み
+- ✅ バリデーションが実装済み（値オブジェクトによる）
+- ✅ On-Demand Revalidation APIが実装済み
+
+### 機能指標
+- ⏳ データ取得が正常に動作（動作確認待ち）
+- ✅ エラーハンドリングが適切
+- ✅ バリデーションが適切（値オブジェクトによる）
+- ⏳ オンデマンドISRが正常に動作（動作確認待ち）
 

@@ -13,6 +13,7 @@ WordPress REST APIからのデータ取得とブログ記事の表示機能を�
 - **フェーズ5.7**: 共有ボタン機能の実装
 - **フェーズ5.8**: Shared Element Transitionの実装
 - **フェーズ5.9**: タグ機能の実装
+- **フェーズ5.10**: オンデマンドISR対応
 
 ---
 
@@ -456,11 +457,127 @@ export const TransitionPage = ({ children }: TransitionPageProps) => {
 
 ---
 
+## フェーズ5.10: オンデマンドISR対応
+
+### 目的
+ブログ記事ページでISR（Incremental Static Regeneration）を有効化し、WordPress管理画面での更新をリアルタイムで反映
+
+### 実装内容
+- ブログ記事一覧ページ（`/blog`）でのISR設定
+- ブログ記事詳細ページ（`/blog/[slug]`）でのISR設定
+- タグ一覧ページ（`/tags`）でのISR設定
+- タグ詳細ページ（`/tags/[slug]`）でのISR設定
+- ページネーション対応
+
+### 主要ファイル
+
+**ブログ記事一覧ページ (`app/blog/page.tsx`)**
+```typescript
+import { unstable_noStore as noStore } from 'next/cache';
+import { PostList } from '@/presentation/components/blog/post-list';
+
+// ISR設定
+export const revalidate = 3600; // 1時間ごとに再生成
+// export const dynamic = 'force-static'; // 静的生成を強制
+
+export default async function BlogPage({
+  searchParams,
+}: {
+  searchParams: { page?: string; tag?: string };
+}) {
+  // キャッシュの動作確認用（本番では削除）
+  // noStore();
+
+  const currentPage = Number(searchParams.page) || 1;
+  
+  // データ取得処理
+  // ...
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-4xl font-bold mb-8">ブログ</h1>
+      <PostList posts={posts} currentPage={currentPage} totalPages={totalPages} />
+    </div>
+  );
+}
+```
+
+**ブログ記事詳細ページ (`app/blog/[slug]/page.tsx`)**
+```typescript
+import { PostDetail } from '@/presentation/components/blog/post-detail';
+
+// ISR設定
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  // ビルド時に全ての記事のスラッグをプリフェッチ
+  const posts = await getPosts();
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
+}
+
+export default async function PostPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const post = await getPostBySlug(params.slug);
+
+  if (!post) {
+    notFound();
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <PostDetail post={post} />
+    </div>
+  );
+}
+```
+
+**タグ一覧ページ (`app/tags/page.tsx`)**
+```typescript
+import { TagList } from '@/presentation/components/tags/tag-list';
+
+// ISR設定
+export const revalidate = 7200; // 2時間ごとに再生成
+
+export default async function TagsPage() {
+  const tags = await getTags();
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-4xl font-bold mb-8">タグ一覧</h1>
+      <TagList tags={tags} />
+    </div>
+  );
+}
+```
+
+### On-Demand Revalidation APIとの連携
+
+フェーズ2.7で実装した `/api/revalidate` エンドポイントが、以下の場合にブログページを再生成します：
+- `type: 'post'` が送信された場合: `/blog`, `/blog/[slug]`, `/` が再生成
+- `type: 'tag'` が送信された場合: `/tags`, `/blog` が再生成
+
+### 完了条件
+- ✅ ブログ記事一覧ページでISRが有効化
+- ✅ ブログ記事詳細ページでISRが有効化
+- ✅ タグ一覧ページでISRが有効化
+- ✅ タグ詳細ページでISRが有効化
+- ✅ generateStaticParamsが実装済み（詳細ページのみ）
+- ✅ WordPress更新時に自動再生成される
+- ✅ 型チェックエラーが0件
+
+---
+
 ## フェーズ5全体の完了条件
 
 ### 技術指標
 - [ ] 型チェックエラーが0件
 - [ ] 全てのページが実装済み
+- [ ] ISRが適切に設定済み
 
 ### 機能指標
 - [ ] 記事一覧が正常に表示
@@ -469,6 +586,7 @@ export const TransitionPage = ({ children }: TransitionPageProps) => {
 - [ ] 共有機能が正常に動作
 - [ ] トランジションが正常に動作
 - [ ] タグ機能が正常に動作
+- [ ] WordPress更新時に自動再生成される
 
 ### 次のフェーズ
 **フェーズ6: 検索機能実装** に進む
