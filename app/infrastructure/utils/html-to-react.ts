@@ -10,6 +10,20 @@ import * as React from "react";
 import * as prod from "react/jsx-runtime";
 import { detectLanguage } from "./detect-language";
 import { addLineNumbers } from "./add-line-numbers";
+import {
+  getHeadingStyles,
+  getParagraphStyles,
+  getListStyles,
+  getListItemStyles,
+  getLinkStyles,
+  getQuoteStyles,
+  getImageStyles,
+  getStrongStyles,
+  getEmStyles,
+  getInlineCodeStyles,
+  getTableStyles,
+} from "@/presentation/utils/prose-styles";
+import { cn } from "@/presentation/utils/cn";
 
 /**
  * WordPressのコードブロックに言語クラスを追加する前処理（純粋関数）
@@ -136,6 +150,165 @@ export const htmlToReactElement = async (
     },
   };
 
+  // スタイル適用済みコンポーネントマップ
+  const styledComponents: Record<string, React.ComponentType<any>> = {
+    // 見出し
+    h1: (props: any) => {
+      return React.createElement("h1", {
+        ...props,
+        className: cn(props.className, getHeadingStyles(1)),
+      });
+    },
+    h2: (props: any) => {
+      return React.createElement("h2", {
+        ...props,
+        className: cn(props.className, getHeadingStyles(2)),
+      });
+    },
+    h3: (props: any) => {
+      return React.createElement("h3", {
+        ...props,
+        className: cn(props.className, getHeadingStyles(3)),
+      });
+    },
+    h4: (props: any) => {
+      return React.createElement("h4", {
+        ...props,
+        className: cn(props.className, getHeadingStyles(4)),
+      });
+    },
+    h5: (props: any) => {
+      return React.createElement("h5", {
+        ...props,
+        className: cn(props.className, getHeadingStyles(5)),
+      });
+    },
+    h6: (props: any) => {
+      return React.createElement("h6", {
+        ...props,
+        className: cn(props.className, getHeadingStyles(6)),
+      });
+    },
+    // 段落
+    p: (props: any) => {
+      return React.createElement("p", {
+        ...props,
+        className: cn(props.className, getParagraphStyles()),
+      });
+    },
+    // リスト
+    ul: (props: any) => {
+      return React.createElement("ul", {
+        ...props,
+        className: cn(props.className, getListStyles("ul")),
+      });
+    },
+    ol: (props: any) => {
+      return React.createElement("ol", {
+        ...props,
+        className: cn(props.className, getListStyles("ol")),
+      });
+    },
+    li: (props: any) => {
+      return React.createElement("li", {
+        ...props,
+        className: cn(props.className, getListItemStyles()),
+      });
+    },
+    // リンク
+    a: (props: any) => {
+      return React.createElement("a", {
+        ...props,
+        className: cn(props.className, getLinkStyles()),
+      });
+    },
+    // 引用
+    blockquote: (props: any) => {
+      return React.createElement("blockquote", {
+        ...props,
+        className: cn(props.className, getQuoteStyles()),
+      });
+    },
+    // 画像
+    img: (props: any) => {
+      return React.createElement("img", {
+        ...props,
+        className: cn(props.className, getImageStyles()),
+      });
+    },
+    // インライン装飾
+    strong: (props: any) => {
+      return React.createElement("strong", {
+        ...props,
+        className: cn(props.className, getStrongStyles()),
+      });
+    },
+    em: (props: any) => {
+      return React.createElement("em", {
+        ...props,
+        className: cn(props.className, getEmStyles()),
+      });
+    },
+    // インラインコード（pre > codeの場合は除外）
+    code: (props: any) => {
+      // pre要素の子である場合はスタイルを適用しない（既存のコードブロック処理を使用）
+      // rehype-pretty-codeが処理したcode要素は既にclassNameを持っているため、それを判定
+      const className = props.className || [];
+      const hasLanguageClass = Array.isArray(className)
+        ? className.some(
+            (cls: string) =>
+              typeof cls === "string" && cls.startsWith("language-")
+          )
+        : false;
+
+      // 言語クラスがある場合はコードブロックなのでインラインコードスタイルを適用しない
+      if (hasLanguageClass) {
+        return React.createElement("code", props);
+      }
+      return React.createElement("code", {
+        ...props,
+        className: cn(props.className, getInlineCodeStyles()),
+      });
+    },
+    // テーブル
+    table: (props: any) => {
+      return React.createElement("table", {
+        ...props,
+        className: cn(props.className, getTableStyles("table")),
+      });
+    },
+    thead: (props: any) => {
+      return React.createElement("thead", {
+        ...props,
+        className: cn(props.className, getTableStyles("thead")),
+      });
+    },
+    tbody: (props: any) => {
+      return React.createElement("tbody", {
+        ...props,
+        className: cn(props.className, getTableStyles("tbody")),
+      });
+    },
+    tr: (props: any) => {
+      return React.createElement("tr", {
+        ...props,
+        className: cn(props.className, getTableStyles("tr")),
+      });
+    },
+    th: (props: any) => {
+      return React.createElement("th", {
+        ...props,
+        className: cn(props.className, getTableStyles("th")),
+      });
+    },
+    td: (props: any) => {
+      return React.createElement("td", {
+        ...props,
+        className: cn(props.className, getTableStyles("td")),
+      });
+    },
+  };
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const rehypeReactOptions: any = {
     Fragment: prod.Fragment,
@@ -143,8 +316,10 @@ export const htmlToReactElement = async (
     jsxs: prod.jsxs,
     createElement: React.createElement,
     components: {
-      // カスタムコンポーネントがあれば使用、なければデフォルト
+      // カスタムコンポーネント（既存のpre処理など）を優先
       ...components,
+      // スタイル適用済みコンポーネント
+      ...styledComponents,
     },
   };
 
