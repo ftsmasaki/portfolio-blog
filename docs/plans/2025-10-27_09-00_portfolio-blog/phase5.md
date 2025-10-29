@@ -495,50 +495,159 @@ export const ShareButtons = ({ url, title }: ShareButtonsProps) => {
 ## フェーズ5.8: Shared Element Transitionの実装
 
 ### 目的
-framer-motionを使用したShared Element Transitionの実装
+framer-motionの`layoutId`を使用して、記事カードから記事詳細ページへ遷移する際に、カードの画像やタイトルがそのまま詳細ページの位置へ連続的にアニメーションする効果を実装する。
+
+**参考サイト**: [azukiazusa.dev](https://azukiazusa.dev/)の記事カードクリック時の遷移動作を参考
 
 ### 実装内容
-- トランジションページラッパー
-- 記事カードからのトランジション
-- 記事詳細へのトランジション
+1. **記事カードコンポーネントの更新**
+   - 画像とタイトルに`layoutId`を設定（`layoutId={`post-image-${post.id}`}`, `layoutId={`post-title-${post.id}`}`）
+   - 遷移時のスムーズなアニメーションを実現
+
+2. **記事詳細ページの更新**
+   - 詳細ページの画像とタイトルにも同じ`layoutId`を設定
+   - カードから詳細ページへの連続的な遷移を実現
+
+3. **ページ遷移の最適化**
+   - `scroll={false}`でスムーズなスクロール遷移を防止
+   - framer-motionの`layout`アニメーションを活用
+
+### 技術的要件
+
+**framer-motionの`layoutId`機能**
+- 同じ`layoutId`を持つ要素間で自動的にレイアウトアニメーションが発生
+- 位置、サイズ、透明度などのプロパティが自動的に補間される
+- ページ遷移時も同じ要素として認識され、スムーズな遷移が実現される
 
 ### 主要ファイル
 
-**トランジションページラッパー (`presentation/components/common/transition-page.tsx`)**
+**記事カードコンポーネントの更新 (`presentation/components/blog/post-card.tsx`)**
 ```typescript
 'use client';
 
-import { AnimatePresence, motion } from 'framer-motion';
-import { usePathname } from 'next/navigation';
-import { ReactNode } from 'react';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { Card, CardContent, CardHeader } from '@/presentation/components/ui/card';
+import type { Post } from '@/domain/blog/entities';
+import { formatDate } from '@/presentation/utils/format';
+import { BLOG_ROUTES } from '@/shared/constants/routes';
 
-interface TransitionPageProps {
-  children: ReactNode;
+interface PostCardProps {
+  post: Post;
 }
 
-export const TransitionPage = ({ children }: TransitionPageProps) => {
-  const pathname = usePathname();
-
+export const PostCard = ({ post }: PostCardProps) => {
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={pathname}
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -20 }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
+    <Link href={BLOG_ROUTES.POST(post.slug.value)} scroll={false}>
+      <motion.article
+        layoutId={`post-${post.id.value}`}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        whileHover={{ y: -4 }}
+        transition={{ duration: 0.2 }}
       >
-        {children}
-      </motion.div>
-    </AnimatePresence>
+        <Card className="h-full overflow-hidden cursor-pointer group hover:shadow-lg transition-shadow">
+          {post.featuredImage && (
+            <div className="relative w-full h-48 overflow-hidden">
+              <motion.img
+                layoutId={`post-image-${post.id.value}`}
+                src={post.featuredImage.value}
+                alt={post.title.value}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+          )}
+          <CardHeader>
+            <motion.h3
+              layoutId={`post-title-${post.id.value}`}
+              className="text-lg font-semibold line-clamp-2"
+            >
+              {post.title.value}
+            </motion.h3>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <time dateTime={post.createdAt.value.toISOString()}>
+                {formatDate(post.createdAt.value)}
+              </time>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground line-clamp-3">
+              {post.excerpt.value}
+            </p>
+          </CardContent>
+        </Card>
+      </motion.article>
+    </Link>
   );
 };
 ```
 
+**記事詳細ページの更新 (`app/blog/[slug]/page.tsx`)**
+```typescript
+'use client';
+
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+// ... 他のインポート
+
+export default async function BlogPostPage({ params }: PageProps) {
+  // ... 既存のコード
+
+  return (
+    <article className="container mx-auto px-4 py-8">
+      {/* アイキャッチ画像 */}
+      {post.featuredImage && (
+        <motion.div
+          layoutId={`post-image-${post.id.value}`}
+          className="relative w-full h-[400px] mb-8 overflow-hidden rounded-lg"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Image
+            src={post.featuredImage.value}
+            alt={post.title.value}
+            fill
+            className="object-cover"
+          />
+        </motion.div>
+      )}
+
+      {/* メタ情報 */}
+      <div className="mb-6">
+        <motion.h1
+          layoutId={`post-title-${post.id.value}`}
+          className="text-4xl font-bold mb-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+        >
+          {post.title.value}
+        </motion.h1>
+        
+        {/* ... 既存のメタ情報表示 */}
+      </div>
+      
+      {/* ... 既存のコンテンツ表示 */}
+    </article>
+  );
+}
+```
+
+### 実装のポイント
+
+1. **layoutIdの一意性**: 各記事ごとに一意のIDを設定（`post-${post.id.value}`）
+2. **画像とタイトルの連動**: カードと詳細ページで同じ`layoutId`を使用
+3. **アニメーションのタイミング**: 詳細ページの要素は`initial`と`animate`でフェードインを制御
+4. **スクロール制御**: `scroll={false}`でページ遷移時の自動スクロールを防止
+
 ### 完了条件
-- [ ] トランジションが実装済み
-- [ ] スムーズに動作
-- [ ] 型チェックエラーが0件
+- ✅ 記事カードの画像とタイトルに`layoutId`が設定済み
+- ✅ 記事詳細ページの画像とタイトルに同じ`layoutId`が設定済み
+- ✅ カードクリック時に画像とタイトルが連続的にアニメーションして詳細ページに遷移する
+- ✅ 遷移がスムーズに動作する
+- ✅ 型チェックエラーが0件
 
 ---
 
