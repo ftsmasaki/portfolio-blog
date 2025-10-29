@@ -7,6 +7,7 @@ import { formatDate } from "@/presentation/utils/format";
 import { TAG_ROUTES } from "@/shared/constants/routes";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { debugDomainEntity } from "@/infrastructure/utils/debug";
 
 interface PageProps {
   params: Promise<{
@@ -43,6 +44,24 @@ export default async function BlogPostPage({ params }: PageProps) {
   }
 
   const post: Post = result.right;
+
+  // デバッグ出力: 記事詳細データ
+  debugDomainEntity(`Post Detail (slug: ${slug})`, {
+    id: post.id.value,
+    title: post.title.value,
+    slug: post.slug.value,
+    excerpt: post.excerpt.value,
+    contentLength: post.content.length,
+    createdAt: post.createdAt.value.toISOString(),
+    updatedAt: post.updatedAt.value.toISOString(),
+    featuredImage: post.featuredImage?.value,
+    tags: post.tags.map(tag => ({
+      id: tag.id.value,
+      name: tag.name.value,
+      slug: tag.slug.value,
+      count: tag.count.value,
+    })),
+  });
 
   // 関連記事取得（全記事を取得して抽出）
   const allPostsResult = await getPosts()();

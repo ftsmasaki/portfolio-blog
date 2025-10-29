@@ -5,6 +5,7 @@ import type {
   WordPressPost,
   WordPressTag,
 } from "@/infrastructure/external/types";
+import { debugWordPressApi } from "@/infrastructure/utils/debug";
 
 /**
  * WordPress APIエラー型
@@ -29,7 +30,7 @@ export const getWordPressPosts = async (
 ): Promise<E.Either<WordPressApiError, WordPressPost[]>> => {
   const url = `${baseUrl}/wp-json/wp/v2/posts?page=${page}&per_page=${perPage}&_embed=true`;
 
-  return pipe(
+  const result = pipe(
     await httpClient.get<WordPressPost[]>(url),
     E.map(response => response.data),
     E.mapLeft(
@@ -39,6 +40,28 @@ export const getWordPressPosts = async (
       })
     )
   );
+
+  // デバッグ出力
+  if (E.isRight(result)) {
+    debugWordPressApi(
+      `getWordPressPosts (page: ${page}, perPage: ${perPage})`,
+      {
+        url,
+        count: result.right.length,
+        posts: result.right,
+      }
+    );
+  } else {
+    debugWordPressApi(
+      `getWordPressPosts (page: ${page}, perPage: ${perPage}) - ERROR`,
+      {
+        url,
+        error: result.left,
+      }
+    );
+  }
+
+  return result;
 };
 
 /**
@@ -54,7 +77,7 @@ export const getWordPressPostBySlug = async (
 ): Promise<E.Either<WordPressApiError, WordPressPost>> => {
   const url = `${baseUrl}/wp-json/wp/v2/posts?slug=${slug}&_embed=true`;
 
-  return pipe(
+  const result = pipe(
     await httpClient.get<WordPressPost[]>(url),
     E.map(response => response.data),
     E.chain(posts => {
@@ -73,6 +96,21 @@ export const getWordPressPostBySlug = async (
       })
     )
   );
+
+  // デバッグ出力
+  if (E.isRight(result)) {
+    debugWordPressApi(`getWordPressPostBySlug (slug: ${slug})`, {
+      url,
+      post: result.right,
+    });
+  } else {
+    debugWordPressApi(`getWordPressPostBySlug (slug: ${slug}) - ERROR`, {
+      url,
+      error: result.left,
+    });
+  }
+
+  return result;
 };
 
 /**

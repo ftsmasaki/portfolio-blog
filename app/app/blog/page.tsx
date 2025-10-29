@@ -4,6 +4,7 @@ import type { Post } from "@/domain/blog/entities";
 import type { Tag } from "@/domain/tags/entities";
 import Link from "next/link";
 import { TAG_ROUTES } from "@/shared/constants/routes";
+import { debugDomainEntity } from "@/infrastructure/utils/debug";
 
 export const metadata = {
   title: "ブログ",
@@ -27,6 +28,36 @@ export default async function BlogPage() {
 
   const posts: Post[] = postsResult.right;
   const tags: Tag[] = tagsResult._tag === "Right" ? tagsResult.right : [];
+
+  // デバッグ出力: 記事一覧データ
+  debugDomainEntity("Post List", {
+    totalPosts: posts.length,
+    posts: posts.map(post => ({
+      id: post.id.value,
+      title: post.title.value,
+      slug: post.slug.value,
+      excerpt: post.excerpt.value,
+      contentLength: post.content.length,
+      createdAt: post.createdAt.value.toISOString(),
+      featuredImage: post.featuredImage?.value,
+      tags: post.tags.map(tag => ({
+        id: tag.id.value,
+        name: tag.name.value,
+        slug: tag.slug.value,
+      })),
+    })),
+  });
+
+  // デバッグ出力: タグ一覧データ
+  debugDomainEntity("Tag List", {
+    totalTags: tags.length,
+    tags: tags.map(tag => ({
+      id: tag.id.value,
+      name: tag.name.value,
+      slug: tag.slug.value,
+      count: tag.count.value,
+    })),
+  });
 
   // よく使われるタグを取得（使用回数でソート、上位10件）
   const popularTags = [...tags]
