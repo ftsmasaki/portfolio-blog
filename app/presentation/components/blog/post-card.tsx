@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { Image } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -27,8 +28,8 @@ export const PostCard = ({ post }: PostCardProps) => {
         transition={{ duration: 0.15, ease: "easeOut" }}
       >
         <Card className="h-full overflow-hidden cursor-pointer group hover:shadow-lg transition-shadow">
-          {post.featuredImage && (
-            <div className="relative w-full aspect-video overflow-hidden bg-muted">
+          <div className="relative w-full aspect-video overflow-hidden bg-muted">
+            {post.featuredImage ? (
               <motion.img
                 layoutId={`post-image-${post.id.value}`}
                 src={post.featuredImage.value}
@@ -36,8 +37,12 @@ export const PostCard = ({ post }: PostCardProps) => {
                 transition={{ layout: { duration: 0.2, ease: "easeOut" } }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
               />
-            </div>
-          )}
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <Image className="w-16 h-16 text-muted-foreground/50" />
+              </div>
+            )}
+          </div>
           <CardHeader>
             <motion.h3
               layoutId={`post-title-${post.id.value}`}
