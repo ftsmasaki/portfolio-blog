@@ -8,4 +8,9 @@ export {
   getLinkStyles,
   getQuoteStyles,
   getImageStyles,
+  getStrongStyles,
+  getEmStyles,
+  getInlineCodeStyles,
+  getTableStyles,
 } from "./prose-styles";
+export type { TableElementType } from "./prose-styles";

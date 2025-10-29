@@ -162,3 +162,100 @@ export const getQuoteStyles = (): string => {
 export const getImageStyles = (): string => {
   return "rounded-lg my-6 max-w-full h-auto";
 };
+
+/**
+ * 太字タグに適用するスタイルクラスを返す純粋関数
+ *
+ * フォントウェイトを太字に設定する。
+ *
+ * @returns Tailwind CSSクラス文字列
+ *
+ * @example
+ * ```typescript
+ * const styles = getStrongStyles();
+ * // 結果: "font-bold text-foreground"
+ * ```
+ */
+export const getStrongStyles = (): string => {
+  return "font-bold text-foreground";
+};
+
+/**
+ * 斜体タグに適用するスタイルクラスを返す純粋関数
+ *
+ * イタリックスタイルを設定する。
+ *
+ * @returns Tailwind CSSクラス文字列
+ *
+ * @example
+ * ```typescript
+ * const styles = getEmStyles();
+ * // 結果: "italic"
+ * ```
+ */
+export const getEmStyles = (): string => {
+  return "italic";
+};
+
+/**
+ * インラインコードタグに適用するスタイルクラスを返す純粋関数
+ *
+ * モノスペースフォント、背景色、パディング、角丸を設定する。
+ * ブロックコード（pre > code）とは区別する。
+ *
+ * @returns Tailwind CSSクラス文字列
+ *
+ * @example
+ * ```typescript
+ * const styles = getInlineCodeStyles();
+ * // 結果: "font-mono text-sm bg-muted px-1.5 py-0.5 rounded text-foreground"
+ * ```
+ */
+export const getInlineCodeStyles = (): string => {
+  return "font-mono text-sm bg-muted px-1.5 py-0.5 rounded text-foreground";
+};
+
+/**
+ * テーブル要素のタイプを表す型
+ */
+export type TableElementType = "table" | "thead" | "tbody" | "tr" | "th" | "td";
+
+/**
+ * テーブル要素に適用するスタイルクラスを返す純粋関数
+ *
+ * テーブル要素全体に対して一貫したスタイリングを適用する。
+ * shadcn/uiのTableコンポーネントは使用せず、Tailwind CSSのみで実装。
+ *
+ * **テーブルスタイリング方針:**
+ * - ボーダーでセルを区切る
+ * - ヘッダー行を強調
+ * - ストライプ行（交互の背景色）
+ * - レスポンシブ対応（横スクロール）
+ *
+ * @param elementType - テーブル要素のタイプ
+ * @returns Tailwind CSSクラス文字列
+ *
+ * @example
+ * ```typescript
+ * const styles = getTableStyles("table");
+ * // 結果: "w-full my-6 border-collapse border border-border overflow-x-auto"
+ * ```
+ */
+export const getTableStyles = (elementType: TableElementType): string => {
+  switch (elementType) {
+    case "table":
+      return "w-full my-6 border-collapse border border-border overflow-x-auto";
+    case "thead":
+      return "bg-muted";
+    case "tbody":
+      return "";
+    case "tr":
+      return "border-b border-border hover:bg-muted/50 transition-colors";
+    case "th":
+      return "px-4 py-2 text-left font-bold text-foreground border border-border";
+    case "td":
+      return "px-4 py-2 text-foreground border border-border";
+    default:
+      return "";
+  }
+};
