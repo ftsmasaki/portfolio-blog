@@ -28,7 +28,7 @@ export const PostCard = ({ post }: PostCardProps) => {
       >
         <Card className="h-full overflow-hidden cursor-pointer group hover:shadow-lg transition-shadow">
           {post.featuredImage && (
-            <div className="relative w-full h-48 overflow-hidden">
+            <div className="relative w-full aspect-video overflow-hidden bg-muted">
               <motion.img
                 layoutId={`post-image-${post.id.value}`}
                 src={post.featuredImage.value}

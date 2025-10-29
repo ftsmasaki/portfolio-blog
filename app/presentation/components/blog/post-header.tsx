@@ -16,7 +16,7 @@ export const PostHeader = ({ post }: PostHeaderProps) => {
       {post.featuredImage && (
         <motion.div
           layoutId={`post-image-${post.id.value}`}
-          className="relative w-full h-[400px] mb-8 overflow-hidden rounded-lg"
+          className="relative w-full aspect-video mb-8 overflow-hidden rounded-lg bg-muted"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{
@@ -29,6 +29,7 @@ export const PostHeader = ({ post }: PostHeaderProps) => {
             alt={post.title.value}
             fill
             className="object-cover"
+            priority
           />
         </motion.div>
       )}
