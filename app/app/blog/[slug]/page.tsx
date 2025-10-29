@@ -144,9 +144,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       )}
 
       {/* 本文 */}
-      <div className="prose prose-slate dark:prose-invert max-w-none mb-8">
-        {contentElement}
-      </div>
+      <div className="max-w-none mb-8">{contentElement}</div>
 
       {/* 関連記事 */}
       {relatedPosts.length > 0 && (
