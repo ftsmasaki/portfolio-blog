@@ -112,7 +112,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       : [];
 
   return (
-    <article className="container mx-auto px-4 py-8">
+    <article className="container mx-auto px-4 py-8 max-w-4xl">
       {/* アイキャッチ画像、タイトル、日時、要約（Shared Element Transition用） */}
       <PostHeader post={post} />
 
@@ -135,7 +135,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       </div>
 
       {/* 本文 */}
-      <div className="max-w-none mb-8">{contentElement}</div>
+      <div className="mb-8 prose prose-lg max-w-none">{contentElement}</div>
 
       {/* 関連記事 */}
       {relatedPosts.length > 0 && (
