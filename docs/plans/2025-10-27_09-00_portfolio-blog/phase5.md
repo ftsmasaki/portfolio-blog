@@ -492,7 +492,7 @@ export const ShareButtons = ({ url, title }: ShareButtonsProps) => {
 
 ---
 
-## フェーズ5.8: Shared Element Transitionの実装
+## ✅ フェーズ5.8: Shared Element Transitionの実装
 
 ### 目的
 framer-motionの`layoutId`を使用して、記事カードから記事詳細ページへ遷移する際に、カードの画像やタイトルがそのまま詳細ページの位置へ連続的にアニメーションする効果を実装する。
