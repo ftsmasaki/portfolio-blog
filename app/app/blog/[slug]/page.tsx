@@ -5,11 +5,12 @@ import { PostHeader } from "@/presentation/components/blog/post-header";
 import { EnhancedCodeBlock } from "@/presentation/components/blog/enhanced-code-block";
 import type { Post } from "@/domain/blog/entities";
 import Link from "next/link";
-import { formatDate } from "@/presentation/utils/format";
 import { TAG_ROUTES } from "@/shared/constants/routes";
 import { notFound } from "next/navigation";
 import { debugDomainEntity } from "@/infrastructure/utils/debug";
 import { htmlToReactElement } from "@/infrastructure/utils/html-to-react";
+import { buildHtmlAndToc } from "@/infrastructure/utils/extract-toc";
+import { Toc } from "@/presentation/components/common/toc";
 import * as React from "react";
 
 // ISR設定: 1時間ごとに再生成
@@ -87,9 +88,13 @@ export default async function BlogPostPage({ params }: PageProps) {
     })),
   });
 
-  // HTMLをReactElementに変換（コードブロックのシンタックスハイライトを含む）
-  // 副作用を持つコンポーネントはここで注入し、純粋関数から分離
-  const contentElement = await htmlToReactElement(post.content, {
+  // 見出しID付与＆TOC抽出 → ReactElement化（コードハイライト含む）
+  const { html: contentWithIds, toc } = await buildHtmlAndToc(post.content, {
+    headings: ["h2", "h3", "h4"],
+    autolink: true,
+  });
+
+  const contentElement = await htmlToReactElement(contentWithIds, {
     pre: (props: any) => {
       const dataLanguage = props["data-language"];
       // rehype-pretty-codeで処理されたコードブロックの場合
@@ -112,42 +117,54 @@ export default async function BlogPostPage({ params }: PageProps) {
       : [];
 
   return (
-    <article className="container mx-auto px-4 py-8 max-w-4xl">
-      {/* アイキャッチ画像、タイトル、日時、要約（Shared Element Transition用） */}
-      <PostHeader post={post} />
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_280px] gap-10">
+        {/* 左カラム: 記事本体 */}
+        <article className="min-w-0">
+          {/* アイキャッチ画像、タイトル、日時、要約（Shared Element Transition用） */}
+          <PostHeader post={post} />
 
-      {/* メタ情報（タグ） */}
-      <div className="mb-6">
-        {/* タグ */}
-        {post.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {post.tags.map(tag => (
-              <Link
-                key={tag.id.value}
-                href={TAG_ROUTES.DETAIL(tag.slug.value)}
-                className="px-3 py-1 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors text-sm"
-              >
-                {tag.name.value}
-              </Link>
-            ))}
+          {/* メタ情報（タグ） */}
+          <div className="mb-6">
+            {/* タグ */}
+            {post.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {post.tags.map(tag => (
+                  <Link
+                    key={tag.id.value}
+                    href={TAG_ROUTES.DETAIL(tag.slug.value)}
+                    className="px-3 py-1 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors text-sm"
+                  >
+                    {tag.name.value}
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
-        )}
+
+          {/* 本文 */}
+          <div className="prose prose-lg w-full lg:max-w-[740px] max-w-none">
+            {contentElement}
+          </div>
+
+          {/* 関連記事 */}
+          {relatedPosts.length > 0 && (
+            <section className="mt-12">
+              <h2 className="text-2xl font-bold mb-6">関連記事</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {relatedPosts.map(relatedPost => (
+                  <PostCard key={relatedPost.id.value} post={relatedPost} />
+                ))}
+              </div>
+            </section>
+          )}
+        </article>
+
+        {/* 右カラム: TOC */}
+        <aside className="hidden lg:block w-[280px]">
+          <Toc entries={toc} />
+        </aside>
       </div>
-
-      {/* 本文 */}
-      <div className="mb-8 prose prose-lg max-w-none">{contentElement}</div>
-
-      {/* 関連記事 */}
-      {relatedPosts.length > 0 && (
-        <section className="mt-12">
-          <h2 className="text-2xl font-bold mb-6">関連記事</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {relatedPosts.map(relatedPost => (
-              <PostCard key={relatedPost.id.value} post={relatedPost} />
-            ))}
-          </div>
-        </section>
-      )}
-    </article>
+    </div>
   );
 }

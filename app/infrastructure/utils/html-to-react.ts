@@ -24,7 +24,33 @@ import {
   getTableStyles,
 } from "@/presentation/utils/prose-styles";
 import { cn } from "@/presentation/utils/cn";
+import { HeadingAnchorButton } from "@/presentation/components/common/heading-anchor-button";
 import { transformLinkAttributes } from "./transform-link-attributes";
+
+// 見出しにコピー用アンカーアイコンを表示し、クリックで#リンクをクリップボードにコピー
+function renderHeadingWithCopy(level: 1 | 2 | 3 | 4 | 5 | 6, props: any) {
+  const Tag = `h${level}` as string;
+  const id: string | undefined = props.id;
+
+  return React.createElement(
+    Tag,
+    {
+      ...props,
+      className: cn(
+        "group relative scroll-mt-16", // ここで scroll-margin-top: 4rem (=64px) をTailwindUtilityで付与
+        props.className,
+        getHeadingStyles(level)
+      ),
+    },
+    React.createElement(HeadingAnchorButton, {
+      id,
+      className: cn(
+        "absolute -left-8 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground"
+      ),
+    }),
+    props.children
+  );
+}
 
 /**
  * WordPressのコードブロックに言語クラスを追加する前処理（純粋関数）
@@ -154,42 +180,12 @@ export const htmlToReactElement = async (
   // スタイル適用済みコンポーネントマップ
   const styledComponents: Record<string, React.ComponentType<any>> = {
     // 見出し
-    h1: (props: any) => {
-      return React.createElement("h1", {
-        ...props,
-        className: cn(props.className, getHeadingStyles(1)),
-      });
-    },
-    h2: (props: any) => {
-      return React.createElement("h2", {
-        ...props,
-        className: cn(props.className, getHeadingStyles(2)),
-      });
-    },
-    h3: (props: any) => {
-      return React.createElement("h3", {
-        ...props,
-        className: cn(props.className, getHeadingStyles(3)),
-      });
-    },
-    h4: (props: any) => {
-      return React.createElement("h4", {
-        ...props,
-        className: cn(props.className, getHeadingStyles(4)),
-      });
-    },
-    h5: (props: any) => {
-      return React.createElement("h5", {
-        ...props,
-        className: cn(props.className, getHeadingStyles(5)),
-      });
-    },
-    h6: (props: any) => {
-      return React.createElement("h6", {
-        ...props,
-        className: cn(props.className, getHeadingStyles(6)),
-      });
-    },
+    h1: (props: any) => renderHeadingWithCopy(1, props),
+    h2: (props: any) => renderHeadingWithCopy(2, props),
+    h3: (props: any) => renderHeadingWithCopy(3, props),
+    h4: (props: any) => renderHeadingWithCopy(4, props),
+    h5: (props: any) => renderHeadingWithCopy(5, props),
+    h6: (props: any) => renderHeadingWithCopy(6, props),
     // 段落
     p: (props: any) => {
       return React.createElement("p", {
