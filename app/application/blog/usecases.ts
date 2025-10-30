@@ -22,6 +22,12 @@ export const createGetPostsByTagUseCase = (repo: PostRepository) =>
   repo.findByTagSlug;
 
 /**
+ * タグIDで投稿を取得するユースケースを作成
+ */
+export const createGetPostsByTagIdUseCase = (repo: PostRepository) =>
+  repo.findByTagId;
+
+/**
  * キーワードで投稿を検索するユースケースを作成
  */
 export const createSearchPostsUseCase = (repo: PostRepository) => repo.search;

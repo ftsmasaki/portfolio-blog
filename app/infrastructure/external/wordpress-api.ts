@@ -65,6 +65,49 @@ export const getWordPressPosts = async (
 };
 
 /**
+ * タグIDで記事一覧を取得する関数
+ *
+ * @param baseUrl - WordPressのベースURL
+ * @param tagId - タグID（数値）
+ * @param page - ページ番号
+ * @param perPage - 1ページあたりの記事数
+ */
+export const getWordPressPostsByTagId = async (
+  baseUrl: string,
+  tagId: number,
+  page: number = 1,
+  perPage: number = 10
+): Promise<E.Either<WordPressApiError, WordPressPost[]>> => {
+  const url = `${baseUrl}/wp-json/wp/v2/posts?tags=${encodeURIComponent(String(tagId))}&page=${page}&per_page=${perPage}&_embed=true`;
+
+  const result = pipe(
+    await httpClient.get<WordPressPost[]>(url),
+    E.map(response => response.data),
+    E.mapLeft(
+      (httpError: HttpError): WordPressApiError => ({
+        message: httpError.message,
+        status: httpError.status,
+      })
+    )
+  );
+
+  // デバッグ出力
+  if (E.isRight(result)) {
+    debugWordPressApi(`getWordPressPostsByTagId (tagId: ${tagId})`, {
+      url,
+      count: result.right.length,
+    });
+  } else {
+    debugWordPressApi(`getWordPressPostsByTagId (tagId: ${tagId}) - ERROR`, {
+      url,
+      error: result.left,
+    });
+  }
+
+  return result;
+};
+
+/**
  * スラッグで記事を取得する関数
  *
  * @param baseUrl - WordPressのベースURL

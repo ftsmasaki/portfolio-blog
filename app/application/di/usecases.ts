@@ -2,6 +2,7 @@ import {
   createGetPostsUseCase,
   createGetPostBySlugUseCase,
   createGetPostsByTagUseCase,
+  createGetPostsByTagIdUseCase,
   createSearchPostsUseCase,
 } from "@/application/blog/usecases";
 import {
@@ -20,6 +21,7 @@ import { wpApiTagRepository } from "@/infrastructure/repositories/WpApiTagReposi
 export const getPosts = createGetPostsUseCase(wpApiPostRepository);
 export const getPostBySlug = createGetPostBySlugUseCase(wpApiPostRepository);
 export const getPostsByTag = createGetPostsByTagUseCase(wpApiPostRepository);
+export const getPostsByTagId = createGetPostsByTagIdUseCase(wpApiPostRepository);
 export const searchPosts = createSearchPostsUseCase(wpApiPostRepository);
 export const getWorks = createGetWorksUseCase(wpApiWorkRepository);
 export const getWorkBySlug = createGetWorkBySlugUseCase(wpApiWorkRepository);

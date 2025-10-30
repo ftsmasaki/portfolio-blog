@@ -23,6 +23,11 @@ export type PostRepository = {
   findByTagSlug: (slug: string) => TaskEither<AppError, Post[]>;
 
   /**
+   * タグIDで投稿を取得
+   */
+  findByTagId: (tagId: number) => TaskEither<AppError, Post[]>;
+
+  /**
    * キーワードで投稿を検索
    */
   search: (query: string) => TaskEither<AppError, Post[]>;
