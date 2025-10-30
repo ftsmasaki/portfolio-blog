@@ -27,7 +27,7 @@ export const PostCard = ({ post }: PostCardProps) => {
         whileHover={{ y: -4 }}
         transition={{ duration: 0.15, ease: "easeOut" }}
       >
-        <Card className="h-full overflow-hidden cursor-pointer group hover:shadow-lg transition-shadow">
+        <Card className="h-full min-h-[420px] flex flex-col overflow-hidden cursor-pointer group hover:shadow-lg transition-shadow">
           <div className="relative w-full aspect-video overflow-hidden bg-muted">
             {post.featuredImage ? (
               <motion.img
@@ -43,7 +43,7 @@ export const PostCard = ({ post }: PostCardProps) => {
               </div>
             )}
           </div>
-          <CardHeader>
+          <CardHeader className="flex flex-col flex-shrink-0">
             <motion.h3
               layoutId={`post-title-${post.id.value}`}
               transition={{ layout: { duration: 0.2, ease: "easeOut" } }}
@@ -61,11 +61,11 @@ export const PostCard = ({ post }: PostCardProps) => {
               </motion.time>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex-shrink-0 pb-6">
             <motion.p
               layoutId={`post-excerpt-${post.id.value}`}
               transition={{ layout: { duration: 0.2, ease: "easeOut" } }}
-              className="text-sm text-muted-foreground line-clamp-3"
+              className="text-sm text-muted-foreground line-clamp-3 h-[60px]"
             >
               {post.excerpt.value}
             </motion.p>
