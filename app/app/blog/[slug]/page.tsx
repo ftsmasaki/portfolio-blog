@@ -91,18 +91,21 @@ export default async function BlogPostPage({ params }: PageProps) {
   // 見出しID付与＆TOC抽出 → ReactElement化（コードハイライト含む）
   const { html: contentWithIds, toc } = await buildHtmlAndToc(post.content, {
     headings: ["h2", "h3", "h4"],
-    autolink: true,
   });
 
   const contentElement = await htmlToReactElement(contentWithIds, {
-    pre: (props: any) => {
+    pre: (
+      props: React.ComponentProps<"pre"> & { "data-language"?: string }
+    ) => {
       const dataLanguage = props["data-language"];
       // rehype-pretty-codeで処理されたコードブロックの場合
       if (dataLanguage) {
-        return React.createElement(EnhancedCodeBlock, {
-          ...props,
-          "data-language": dataLanguage,
-        });
+        const { children, className } = props;
+        return (
+          <EnhancedCodeBlock data-language={dataLanguage} className={className}>
+            {children as React.ReactNode}
+          </EnhancedCodeBlock>
+        );
       }
       // 通常のpre要素の場合
       return React.createElement("pre", props);

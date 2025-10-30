@@ -28,7 +28,10 @@ import { HeadingAnchorButton } from "@/presentation/components/common/heading-an
 import { transformLinkAttributes } from "./transform-link-attributes";
 
 // 見出しにコピー用アンカーアイコンを表示し、クリックで#リンクをクリップボードにコピー
-function renderHeadingWithCopy(level: 1 | 2 | 3 | 4 | 5 | 6, props: any) {
+function renderHeadingWithCopy(
+  level: 1 | 2 | 3 | 4 | 5 | 6,
+  props: React.ComponentProps<"h1">
+) {
   const Tag = `h${level}` as string;
   const id: string | undefined = props.id;
 
@@ -139,7 +142,7 @@ const preprocessWordPressCodeBlocks = (html: string): string => {
  */
 export const htmlToReactElement = async (
   html: string,
-  components?: Record<string, React.ComponentType<any>>
+  components?: Record<string, React.ElementType>
 ): Promise<React.ReactElement> => {
   // WordPressのコードブロックを前処理
   const preprocessedHtml = preprocessWordPressCodeBlocks(html);
@@ -178,42 +181,43 @@ export const htmlToReactElement = async (
   };
 
   // スタイル適用済みコンポーネントマップ
-  const styledComponents: Record<string, React.ComponentType<any>> = {
+  // 各タグのprops型を厳密化
+  const styledComponents: Record<string, React.ElementType> = {
     // 見出し
-    h1: (props: any) => renderHeadingWithCopy(1, props),
-    h2: (props: any) => renderHeadingWithCopy(2, props),
-    h3: (props: any) => renderHeadingWithCopy(3, props),
-    h4: (props: any) => renderHeadingWithCopy(4, props),
-    h5: (props: any) => renderHeadingWithCopy(5, props),
-    h6: (props: any) => renderHeadingWithCopy(6, props),
+    h1: (props: React.ComponentProps<"h1">) => renderHeadingWithCopy(1, props),
+    h2: (props: React.ComponentProps<"h2">) => renderHeadingWithCopy(2, props),
+    h3: (props: React.ComponentProps<"h3">) => renderHeadingWithCopy(3, props),
+    h4: (props: React.ComponentProps<"h4">) => renderHeadingWithCopy(4, props),
+    h5: (props: React.ComponentProps<"h5">) => renderHeadingWithCopy(5, props),
+    h6: (props: React.ComponentProps<"h6">) => renderHeadingWithCopy(6, props),
     // 段落
-    p: (props: any) => {
+    p: (props: React.ComponentProps<"p">) => {
       return React.createElement("p", {
         ...props,
         className: cn(props.className, getParagraphStyles()),
       });
     },
     // リスト
-    ul: (props: any) => {
+    ul: (props: React.ComponentProps<"ul">) => {
       return React.createElement("ul", {
         ...props,
         className: cn(props.className, getListStyles("ul")),
       });
     },
-    ol: (props: any) => {
+    ol: (props: React.ComponentProps<"ol">) => {
       return React.createElement("ol", {
         ...props,
         className: cn(props.className, getListStyles("ol")),
       });
     },
-    li: (props: any) => {
+    li: (props: React.ComponentProps<"li">) => {
       return React.createElement("li", {
         ...props,
         className: cn(props.className, getListItemStyles()),
       });
     },
     // リンク
-    a: (props: any) => {
+    a: (props: React.ComponentProps<"a">) => {
       const href = props.href || "";
       const externalAttributes = transformLinkAttributes(href);
       return React.createElement("a", {
@@ -223,43 +227,45 @@ export const htmlToReactElement = async (
       });
     },
     // 引用
-    blockquote: (props: any) => {
+    blockquote: (props: React.ComponentProps<"blockquote">) => {
       return React.createElement("blockquote", {
         ...props,
         className: cn(props.className, getQuoteStyles()),
       });
     },
     // 画像
-    img: (props: any) => {
+    img: (props: React.ComponentProps<"img">) => {
       return React.createElement("img", {
         ...props,
         className: cn(props.className, getImageStyles()),
       });
     },
     // インライン装飾
-    strong: (props: any) => {
+    strong: (props: React.ComponentProps<"strong">) => {
       return React.createElement("strong", {
         ...props,
         className: cn(props.className, getStrongStyles()),
       });
     },
-    em: (props: any) => {
+    em: (props: React.ComponentProps<"em">) => {
       return React.createElement("em", {
         ...props,
         className: cn(props.className, getEmStyles()),
       });
     },
     // インラインコード（pre > codeの場合は除外）
-    code: (props: any) => {
+    code: (props: React.ComponentProps<"code">) => {
       // pre要素の子である場合はスタイルを適用しない（既存のコードブロック処理を使用）
       // rehype-pretty-codeが処理したcode要素は既にclassNameを持っているため、それを判定
-      const className = props.className || [];
-      const hasLanguageClass = Array.isArray(className)
-        ? className.some(
-            (cls: string) =>
-              typeof cls === "string" && cls.startsWith("language-")
-          )
-        : false;
+      const className = props.className;
+      const classList = Array.isArray(className)
+        ? className
+        : typeof className === "string"
+        ? className.split(" ")
+        : [];
+      const hasLanguageClass = classList.some(
+        cls => typeof cls === "string" && cls.startsWith("language-")
+      );
 
       // 言語クラスがある場合はコードブロックなのでインラインコードスタイルを適用しない
       if (hasLanguageClass) {
@@ -271,37 +277,37 @@ export const htmlToReactElement = async (
       });
     },
     // テーブル
-    table: (props: any) => {
+    table: (props: React.ComponentProps<"table">) => {
       return React.createElement("table", {
         ...props,
         className: cn(props.className, getTableStyles("table")),
       });
     },
-    thead: (props: any) => {
+    thead: (props: React.ComponentProps<"thead">) => {
       return React.createElement("thead", {
         ...props,
         className: cn(props.className, getTableStyles("thead")),
       });
     },
-    tbody: (props: any) => {
+    tbody: (props: React.ComponentProps<"tbody">) => {
       return React.createElement("tbody", {
         ...props,
         className: cn(props.className, getTableStyles("tbody")),
       });
     },
-    tr: (props: any) => {
+    tr: (props: React.ComponentProps<"tr">) => {
       return React.createElement("tr", {
         ...props,
         className: cn(props.className, getTableStyles("tr")),
       });
     },
-    th: (props: any) => {
+    th: (props: React.ComponentProps<"th">) => {
       return React.createElement("th", {
         ...props,
         className: cn(props.className, getTableStyles("th")),
       });
     },
-    td: (props: any) => {
+    td: (props: React.ComponentProps<"td">) => {
       return React.createElement("td", {
         ...props,
         className: cn(props.className, getTableStyles("td")),
@@ -309,8 +315,15 @@ export const htmlToReactElement = async (
     },
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rehypeReactOptions: any = {
+  type RehypeReactOptions = {
+    Fragment: typeof prod.Fragment;
+    jsx: typeof prod.jsx;
+    jsxs: typeof prod.jsxs;
+    createElement: typeof React.createElement;
+    components?: Record<string, React.ElementType>;
+  };
+
+  const rehypeReactOptions: RehypeReactOptions = {
     Fragment: prod.Fragment,
     jsx: prod.jsx,
     jsxs: prod.jsxs,

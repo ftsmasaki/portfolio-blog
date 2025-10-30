@@ -12,7 +12,6 @@ export interface TocEntry {
 
 export interface BuildHtmlAndTocOptions {
   headings?: Array<"h1" | "h2" | "h3" | "h4" | "h5" | "h6">;
-  autolink?: boolean; // deprecated
 }
 
 /**
@@ -52,8 +51,18 @@ export const buildHtmlAndToc = async (
     return Array.isArray(children) ? children.map(toPlainText).join("") : "";
   };
 
-  type RawItem = any;
-  const normalize = (item: RawItem): TocEntry => {
+  interface TocRawItem {
+    id?: string;
+    url?: string;
+    title?: RawNode | RawNode[];
+    text?: RawNode | RawNode[];
+    value?: RawNode;
+    depth?: number;
+    rank?: number;
+    children?: TocRawItem[];
+  }
+
+  const normalize = (item: TocRawItem): TocEntry => {
     const id: string =
       item?.id ??
       (typeof item?.url === "string" ? item.url.replace(/^#/, "") : "");
@@ -68,12 +77,12 @@ export const buildHtmlAndToc = async (
         ? item.rank
         : 0;
     const children: TocEntry[] = Array.isArray(item?.children)
-      ? (item.children as RawItem[]).map(normalize)
+      ? item.children.map(normalize)
       : [];
     return { id, text, depth, children };
   };
 
-  const raw = (file.data as { toc?: RawItem[] }).toc ?? [];
+  const raw = (file.data as { toc?: TocRawItem[] }).toc ?? [];
   const toc: TocEntry[] = Array.isArray(raw) ? raw.map(normalize) : [];
   return { html: processedHtml, toc };
 };

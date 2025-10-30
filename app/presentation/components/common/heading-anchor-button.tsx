@@ -24,8 +24,8 @@ export function HeadingAnchorButton({
       const hash = id ? `#${id}` : "";
       const url = `${window.location.origin}${pathname}${hash}`;
       void navigator.clipboard.writeText(url);
-      // ページ内の対象見出しへ遷移
-      router.push(`${pathname}${hash}`);
+      // ページ内の対象見出しへ遷移（履歴は置換）
+      router.replace(`${pathname}${hash}`);
       // コピー完了フィードバック
       setCopied(true);
       if (timerRef.current) window.clearTimeout(timerRef.current);
@@ -47,7 +47,8 @@ export function HeadingAnchorButton({
       onClick={onCopy}
       className={cn(
         "absolute -left-8 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100",
-        "transition-opacity",
+        "transition-opacity focus:opacity-100 focus-visible:opacity-100",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         copied
           ? "text-emerald-500"
           : "text-muted-foreground hover:text-foreground",
@@ -60,6 +61,10 @@ export function HeadingAnchorButton({
       ) : (
         <LinkIcon className="h-4 w-4" />
       )}
+      {/* スクリーンリーダー向けコピー完了通知 */}
+      <span className="sr-only" role="status" aria-live="polite">
+        {copied ? "リンクをコピーしました" : ""}
+      </span>
     </button>
   );
 }
