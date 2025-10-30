@@ -9,7 +9,13 @@ interface TagBadgeProps {
 }
 
 // shadcn/ui Badge 相当の最小実装（既存にbadgeが未導入のため）
-const Badge = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+const Badge = ({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => (
   <span
     className={
       "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium transition-colors " +
@@ -21,11 +27,15 @@ const Badge = ({ children, className = "" }: { children: React.ReactNode; classN
   </span>
 );
 
-export const TagBadge = ({ tag, showCount = true, className }: TagBadgeProps) => {
+export const TagBadge = ({
+  tag,
+  showCount = true,
+  className,
+}: TagBadgeProps) => {
   return (
     <Link href={TAG_ROUTES.DETAIL(tag.slug.value)} prefetch className="group">
       <Badge className={className}>
-        {tag.name.value}
+        #{tag.name.value}
         {showCount && (
           <span className="ml-2 text-[10px] text-muted-foreground group-hover:text-foreground">
             {tag.count.value}
@@ -35,5 +45,3 @@ export const TagBadge = ({ tag, showCount = true, className }: TagBadgeProps) =>
     </Link>
   );
 };
-
-
