@@ -66,11 +66,11 @@ export const mapWordPressPostToDomain = (
       )
     ),
     E.map(({ id, title, slug, excerpt, createdAt, updatedAt }) => {
-      // タグのマッピング
-      const wpTerms =
-        wpPost._embedded?.["wp:term"]?.[0]?.filter(
-          term => term.taxonomy === "post_tag"
-        ) || [];
+      // タグのマッピング（wp:term はタクソノミーごとの配列配列。全配列をflattenしてpost_tagのみ抽出）
+      const termGroups = (wpPost._embedded?.["wp:term"] ?? []) as Array<any[]>;
+      const wpTerms = termGroups
+        .flat()
+        .filter(term => term && term.taxonomy === "post_tag");
 
       const tags = wpTerms
         .map(term => {

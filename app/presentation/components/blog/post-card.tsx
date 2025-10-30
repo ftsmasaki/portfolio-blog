@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useEffect } from "react";
 import { Image } from "lucide-react";
 import {
   Card,
@@ -11,12 +12,32 @@ import {
 import type { Post } from "@/domain/blog/entities";
 import { formatDate } from "@/presentation/utils/format";
 import { BLOG_ROUTES } from "@/shared/constants/routes";
+import { TagList } from "@/presentation/components/common/tag-list";
 
 interface PostCardProps {
   post: Post;
 }
 
 export const PostCard = ({ post }: PostCardProps) => {
+  useEffect(() => {
+    // Debug: 各カードのタグ情報を出力
+    try {
+      // 最小限の情報のみ表示
+      // eslint-disable-next-line no-console
+      console.debug("[PostCard] tags", {
+        postSlug: post.slug.value,
+        tagCount: post.tags.length,
+        tags: post.tags.map(t => ({
+          id: t.id.value,
+          slug: t.slug.value,
+          name: t.name.value,
+        })),
+      });
+    } catch (_) {
+      // no-op
+    }
+  }, [post]);
+
   return (
     <Link href={BLOG_ROUTES.POST(post.slug.value)} scroll={false}>
       <motion.article
@@ -43,7 +64,7 @@ export const PostCard = ({ post }: PostCardProps) => {
               </div>
             )}
           </div>
-          <CardHeader className="flex flex-col flex-shrink-0">
+          <CardHeader className="flex flex-col shrink-0">
             <motion.h3
               layoutId={`post-title-${post.id.value}`}
               transition={{ layout: { duration: 0.2, ease: "easeOut" } }}
@@ -60,8 +81,13 @@ export const PostCard = ({ post }: PostCardProps) => {
                 {formatDate(post.createdAt.value)}
               </motion.time>
             </div>
+            {post.tags.length > 0 && (
+              <div className="mt-2">
+                <TagList tags={post.tags} showCount={false} link={false} />
+              </div>
+            )}
           </CardHeader>
-          <CardContent className="flex-shrink-0 pb-6">
+          <CardContent className="shrink-0 pb-6">
             <motion.p
               layoutId={`post-excerpt-${post.id.value}`}
               transition={{ layout: { duration: 0.2, ease: "easeOut" } }}

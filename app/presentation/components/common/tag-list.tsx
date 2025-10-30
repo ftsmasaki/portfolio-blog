@@ -5,9 +5,17 @@ interface TagListProps {
   readonly tags: Tag[];
   readonly title?: string;
   readonly className?: string;
+  readonly showCount?: boolean;
+  readonly link?: boolean;
 }
 
-export const TagList = ({ tags, title, className }: TagListProps) => {
+export const TagList = ({
+  tags,
+  title,
+  className,
+  showCount = true,
+  link = true,
+}: TagListProps) => {
   if (tags.length === 0) {
     return (
       <div className={className}>
@@ -25,7 +33,7 @@ export const TagList = ({ tags, title, className }: TagListProps) => {
       <ul className="flex flex-wrap gap-2">
         {sorted.map(tag => (
           <li key={tag.id.value}>
-            <TagBadge tag={tag} />
+            <TagBadge tag={tag} showCount={showCount} link={link} />
           </li>
         ))}
       </ul>

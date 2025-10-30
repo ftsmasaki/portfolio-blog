@@ -6,6 +6,7 @@ interface TagBadgeProps {
   readonly tag: Tag;
   readonly showCount?: boolean;
   readonly className?: string;
+  readonly link?: boolean;
 }
 
 // shadcn/ui Badge 相当の最小実装（既存にbadgeが未導入のため）
@@ -31,7 +32,26 @@ export const TagBadge = ({
   tag,
   showCount = true,
   className,
+  link = true,
 }: TagBadgeProps) => {
+  if (!link) {
+    return (
+      <Badge
+        className={
+          (className ? className + " " : "") +
+          "cursor-default hover:bg-primary/10"
+        }
+      >
+        #{tag.name.value}
+        {showCount && (
+          <span className="ml-2 text-[10px] text-muted-foreground">
+            {tag.count.value}
+          </span>
+        )}
+      </Badge>
+    );
+  }
+
   return (
     <Link href={TAG_ROUTES.DETAIL(tag.slug.value)} prefetch className="group">
       <Badge className={className}>
