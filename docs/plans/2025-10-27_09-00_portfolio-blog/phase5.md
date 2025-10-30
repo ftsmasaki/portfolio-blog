@@ -310,112 +310,160 @@ export const PostContent = ({ html }: PostContentProps) => {
 ## フェーズ5.6: TOC機能の実装
 
 ### 目的
-Zenn風の追従目次（Table of Contents）機能の実装
+- Zenn風デザインの**追従目次（Table of Contents）機能**を実装し、UX／アクセシビリティ性も高く、階層付き・アクティブ連動対応を目指す。
 
 ### 実装内容
-- TOC生成機能
-- 追従表示機能
-- アクティブセクションのハイライト
+1. **TOCデータ抽出の純粋関数化（rehypeベース）**
+   - WordPressの`content.rendered`（HTML文字列）をrehypeでパース
+   - `rehype-slug`で見出しに`id`を付与し、`rehype-extract-toc`で`{ id, title(text), depth }`ツリーを抽出
+   - 必要に応じて`rehype-autolink-headings`で見出しを自動リンク化
+   - 返り値は「加工済みHTML」と「TOC配列」のペア (例: `/app/infrastructure/utils/extract-toc.ts`)
+2. **TOCコンポーネント**
+   - 受け取ったTOC配列を`ul/li`の入れ子で描画（Zenn風スタイル）
+   - IntersectionObserverでスクロール連動ハイライト
+   - アンカーリンクでスムーズスクロール
+   - モバイル時の折りたたみ/フローティングを検討
+
+3. **アーキテクチャ整理**
+   - 見出し→TOCデータ変換は純粋関数(infrastructure/utils)
+   - UI表示専用（presentation/components/common/toc.tsx など）
+
+### 使用ライブラリ（想定）
+- unified / rehype-parse / rehype-stringify
+- rehype-slug（見出しID付与）
+- rehype-extract-toc（TOC抽出）
+- rehype-autolink-headings（任意：見出し自動リンク）
+- rehype-sanitize（任意：安全性重視時）
+- IntersectionObserver API（アクティブセクション検知）
 
 ### 主要ファイル
 
-**TOC (`presentation/components/blog/toc.tsx`)**
+**TOCデータ抽出ユーティリティ (`infrastructure/utils/extract-toc.ts`)**
+```typescript
+import { unified } from 'unified';
+import rehypeParse from 'rehype-parse';
+import rehypeStringify from 'rehype-stringify';
+import rehypeSlug from 'rehype-slug';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeExtractToc from 'rehype-extract-toc';
+
+export interface TocEntry {
+  id: string;
+  text: string;
+  depth: number; // h2なら2、h3なら3
+  children?: TocEntry[];
+}
+
+/**
+ * WordPress記事HTMLから見出し情報を抽出し、加工済みHTMLとTOCを返す
+ */
+export async function buildHtmlAndToc(html: string, options?: { headings?: Array<'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'> }) {
+  const headings = options?.headings ?? ['h2', 'h3', 'h4'];
+
+  const file = await unified()
+    .use(rehypeParse, { fragment: true })
+    .use(rehypeSlug)
+    .use(rehypeAutolinkHeadings, { behavior: 'wrap' })
+    .use(rehypeExtractToc, { headings })
+    .use(rehypeStringify)
+    .process(html);
+
+  const processedHtml = String(file);
+  const toc = (file.data as { toc?: TocEntry[] }).toc ?? [];
+  return { html: processedHtml, toc };
+}
+```
+
+**TOCコンポーネント (`presentation/components/common/toc.tsx`)**
 ```typescript
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils/cn';
-
-interface TocItem {
-  id: string;
-  text: string;
-  level: number;
-}
+import { cn } from '@/presentation/utils/cn';
+import type { TocEntry } from '@/infrastructure/utils/extract-toc';
 
 interface TocProps {
-  items: TocItem[];
+  entries: TocEntry[];
+  className?: string;
 }
 
-export const Toc = ({ items }: TocProps) => {
+export const Toc = ({ entries, className }: TocProps) => {
   const [activeId, setActiveId] = useState<string>('');
-  const headersRef = useRef<Map<string, IntersectionObserverEntry>>(new Map());
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.target.id) {
-            if (entry.isIntersecting) {
-              headersRef.current.set(entry.target.id, entry);
-            } else {
-              headersRef.current.delete(entry.target.id);
-            }
-          }
-        });
-
-        const visible = Array.from(headersRef.current.values());
-        if (visible.length > 0) {
-          const topMost = visible.reduce((prev, current) =>
-            current.boundingClientRect.top < prev.boundingClientRect.top
-              ? current
-              : prev
-          );
-          setActiveId(topMost.target.id);
-        }
+        // ビューポート内に見出しが入った際の処理
+        // 最も上にある見出しのidをactiveIdに設定
       },
-      {
-        rootMargin: '-100px 0px -80% 0px',
-        threshold: 0,
-      }
+      { rootMargin: '-100px 0px -80% 0px', threshold: 0 }
     );
 
-    const headers = document.querySelectorAll('h2, h3, h4');
-    headers.forEach((header) => observer.observe(header));
+    // 見出し要素を監視
+    const headings = document.querySelectorAll('h2, h3, h4, h5');
+    headings.forEach((heading) => observer.observe(heading));
 
     return () => observer.disconnect();
   }, []);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  if (items.length === 0) return null;
+  if (entries.length === 0) return null;
 
-  return (
-    <nav className="sticky top-20 max-h-[calc(100vh-5rem)] overflow-y-auto" aria-label="目次">
-      <h2 className="font-semibold text-sm mb-4">目次</h2>
-      <ul className="space-y-1">
-        {items.map((item) => (
+  // ネスト構造のレンダリング用ヘルパー関数
+  const renderTocItems = (items: TocEntry[], currentDepth = 2) => {
+    const filteredItems = items.filter(item => item.depth === currentDepth);
+    if (filteredItems.length === 0) return null;
+
+    return (
+      <ul className={cn('space-y-1', currentDepth > 2 && 'ml-4')}>
+        {filteredItems.map((item) => (
           <li key={item.id}>
             <button
               onClick={() => scrollToSection(item.id)}
               className={cn(
-                'flex items-start gap-2 text-sm text-left w-full py-1 px-2 rounded-md',
+                'flex items-start gap-2 text-sm text-left w-full py-1 px-2 rounded-md transition-colors',
                 'hover:bg-accent hover:text-accent-foreground',
-                activeId === item.id && 'bg-accent text-accent-foreground font-medium',
-                item.level === 3 && 'ml-4',
-                item.level === 4 && 'ml-8'
+                activeId === item.id && 'bg-accent text-accent-foreground font-medium'
               )}
             >
               <ChevronRight className="h-4 w-4 mt-0.5 shrink-0" />
               <span className="line-clamp-2">{item.text}</span>
             </button>
+            {/* 子要素の再帰レンダリング */}
+            {renderTocItems(items, currentDepth + 1)}
           </li>
         ))}
       </ul>
+    );
+  };
+
+  return (
+    <nav
+      className={cn(
+        'sticky top-20 max-h-[calc(100vh-5rem)] overflow-y-auto',
+        className
+      )}
+      aria-label="目次"
+    >
+      <h2 className="font-semibold text-sm mb-4">目次</h2>
+      {renderTocItems(entries)}
     </nav>
   );
 };
 ```
 
 ### 完了条件
-- [ ] TOC機能が実装済み
-- [ ] 追従表示が動作
-- [ ] アクティブセクションがハイライト表示
+- [ ] 記事HTML→TOCデータ抽出の純粋関数（テストあり）が完成
+- [ ] 目次UIコンポーネント（propsでTOC配列受取）が完成
+- [ ] サイドバー/追従目次の実装
+- [ ] アクティブ見出しのハイライト表示が動作
+- [ ] ネスト見出し処理・インデントが動作
+- [ ] コード分離、型厳密なProps定義
 - [ ] 型チェックエラーが0件
 
 ---
