@@ -211,7 +211,7 @@ export const getWordPressTagBySlug = async (
   baseUrl: string,
   slug: string
 ): Promise<E.Either<WordPressApiError, WordPressTag>> => {
-  const url = `${baseUrl}/wp-json/wp/v2/tags?slug=${slug}`;
+  const url = `${baseUrl}/wp-json/wp/v2/tags?slug=${encodeURIComponent(slug)}`;
 
   return pipe(
     await httpClient.get<WordPressTag[]>(url),
