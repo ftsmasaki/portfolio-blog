@@ -76,12 +76,22 @@ export const PostHeader = ({ post }: PostHeaderProps) => {
       <div className="mb-6">
         {/* タグ */}
         {post.tags.length > 0 && (
-          <TagList
-            tags={post.tags}
-            title={undefined}
-            link={true}
-            showCount={false}
-          />
+          <motion.div
+            layoutId={`post-tags-${post.id.value}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              layout: { duration: 0.2, ease: "easeOut" },
+              opacity: { duration: 0.15, delay: 0.08 },
+            }}
+          >
+            <TagList
+              tags={post.tags}
+              title={undefined}
+              link={true}
+              showCount={false}
+            />
+          </motion.div>
         )}
       </div>
 

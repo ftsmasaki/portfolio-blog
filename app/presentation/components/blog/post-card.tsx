@@ -82,9 +82,13 @@ export const PostCard = ({ post }: PostCardProps) => {
               </motion.time>
             </div>
             {post.tags.length > 0 && (
-              <div className="mt-2">
+              <motion.div
+                layoutId={`post-tags-${post.id.value}`}
+                className="mt-2"
+                transition={{ layout: { duration: 0.2, ease: "easeOut" } }}
+              >
                 <TagList tags={post.tags} showCount={false} link={false} />
-              </div>
+              </motion.div>
             )}
           </CardHeader>
           <CardContent className="shrink-0 pb-6">
