@@ -468,75 +468,11 @@ export const Toc = ({ entries, className }: TocProps) => {
 
 ---
 
-## フェーズ5.7: 共有ボタン機能の実装
+## フェーズ5.7: 共有機能の実装（分割）
 
-### 目的
-SNS共有機能の実装
+本サブフェーズは計画とスコープが拡張されたため、専用の実装計画書へ分割しました。詳細は以下を参照してください。
 
-### 実装内容
-- Twitter共有機能
-- Facebook共有機能
-- クリップボードコピー機能
-
-### 主要ファイル
-
-**ShareButtons (`presentation/components/blog/share-buttons.tsx`)**
-```typescript
-import { Button } from '@/components/ui/button';
-import { Share2, Twitter, Facebook, Copy } from 'lucide-react';
-
-interface ShareButtonsProps {
-  url: string;
-  title: string;
-}
-
-export const ShareButtons = ({ url, title }: ShareButtonsProps) => {
-  const shareUrl = encodeURIComponent(url);
-  const shareTitle = encodeURIComponent(title);
-
-  const shareToTwitter = () => {
-    window.open(
-      `https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareTitle}`,
-      '_blank'
-    );
-  };
-
-  const shareToFacebook = () => {
-    window.open(
-      `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`,
-      '_blank'
-    );
-  };
-
-  const copyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(url);
-      // トースト通知など
-    } catch (err) {
-      console.error('Failed to copy: ', err);
-    }
-  };
-
-  return (
-    <div className="flex gap-2">
-      <Button variant="outline" size="sm" onClick={shareToTwitter}>
-        <Twitter className="h-4 w-4" />
-      </Button>
-      <Button variant="outline" size="sm" onClick={shareToFacebook}>
-        <Facebook className="h-4 w-4" />
-      </Button>
-      <Button variant="outline" size="sm" onClick={copyToClipboard}>
-        <Copy className="h-4 w-4" />
-      </Button>
-    </div>
-  );
-};
-```
-
-### 完了条件
-- [ ] 共有ボタンが実装済み
-- [ ] 正常に動作
-- [ ] 型チェックエラーが0件
+- 実装計画書: `docs/plans/2025-10-31_02-09_phase5-7-social-sharing/implementation-plan.md`
 
 ---
 
