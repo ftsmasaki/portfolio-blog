@@ -1,6 +1,5 @@
-import Link from "next/link";
 import type { Tag } from "@/domain/tags/entities";
-import { TAG_ROUTES } from "@/shared/constants/routes";
+import { TagBadge } from "@/presentation/components/common/tag-badge";
 
 interface TagListProps {
   readonly tags: Tag[];
@@ -26,18 +25,10 @@ export const TagList = ({ tags, title, className }: TagListProps) => {
       <ul className="flex flex-wrap gap-2">
         {sorted.map(tag => (
           <li key={tag.id.value}>
-            <Link
-              href={TAG_ROUTES.DETAIL(tag.slug.value)}
-              className="px-3 py-1 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors text-sm"
-            >
-              {tag.name.value}
-              <span className="ml-2 text-xs text-muted-foreground">{tag.count.value}</span>
-            </Link>
+            <TagBadge tag={tag} />
           </li>
         ))}
       </ul>
     </div>
   );
 };
-
-
