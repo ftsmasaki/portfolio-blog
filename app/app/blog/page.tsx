@@ -2,8 +2,7 @@ import { getPosts, getTags } from "@/application/di/usecases";
 import { PostList } from "@/presentation/components/blog/post-list";
 import type { Post } from "@/domain/blog/entities";
 import type { Tag } from "@/domain/tags/entities";
-import Link from "next/link";
-import { TAG_ROUTES } from "@/shared/constants/routes";
+import { TagList } from "@/presentation/components/common/tag-list";
 import { debugDomainEntity } from "@/infrastructure/utils/debug";
 
 // ISR設定: 1時間ごとに再生成
@@ -72,24 +71,7 @@ export default async function BlogPage() {
       <h1 className="text-3xl font-bold mb-8">ブログ</h1>
 
       {/* タグ一覧 */}
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">タグ</h2>
-        <div className="flex flex-wrap gap-2">
-          {popularTags.length > 0 ? (
-            popularTags.map(tag => (
-              <Link
-                key={tag.id.value}
-                href={TAG_ROUTES.DETAIL(tag.slug.value)}
-                className="px-3 py-1 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors text-sm"
-              >
-                {tag.name.value}
-              </Link>
-            ))
-          ) : (
-            <p className="text-sm text-muted-foreground">タグがありません</p>
-          )}
-        </div>
-      </div>
+      <TagList tags={popularTags} title="タグ" className="mb-8" />
 
       {/* 記事一覧とページネーション */}
       <PostList posts={posts} postsPerPage={12} />

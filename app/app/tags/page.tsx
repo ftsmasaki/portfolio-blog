@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { TagList } from "@/presentation/components/tags/tag-list";
+import { TagList } from "@/presentation/components/common/tag-list";
 import { getTags } from "@/application/di/usecases";
 import type { Tag } from "@/domain/tags/entities";
 
@@ -37,5 +37,3 @@ export default async function TagsPage() {
     </div>
   );
 }
-
-
