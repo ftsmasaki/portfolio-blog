@@ -60,7 +60,7 @@ export const Toc = ({ entries, className }: TocProps) => {
 
   const renderItems = (items: TocEntry[], depthBase = 2) => {
     return (
-      <ul className={cn("space-y-1", depthBase > 2 && "ml-4")}>
+      <ul className={cn("space-y-1", depthBase > 2 && "ml-4 mt-1")}> 
         {items.map(item => (
           <li key={item.id}>
             <button
