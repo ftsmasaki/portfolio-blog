@@ -4,8 +4,6 @@ import { PostCard } from "@/presentation/components/blog/post-card";
 import { PostHeader } from "@/presentation/components/blog/post-header";
 import { EnhancedCodeBlock } from "@/presentation/components/blog/enhanced-code-block";
 import type { Post } from "@/domain/blog/entities";
-import Link from "next/link";
-import { TAG_ROUTES } from "@/shared/constants/routes";
 import { notFound } from "next/navigation";
 import { debugDomainEntity } from "@/infrastructure/utils/debug";
 import { htmlToReactElement } from "@/infrastructure/utils/html-to-react";
@@ -126,24 +124,6 @@ export default async function BlogPostPage({ params }: PageProps) {
         <article className="min-w-0">
           {/* アイキャッチ画像、タイトル、日時、要約（Shared Element Transition用） */}
           <PostHeader post={post} />
-
-          {/* メタ情報（タグ） */}
-          <div className="mb-6">
-            {/* タグ */}
-            {post.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {post.tags.map(tag => (
-                  <Link
-                    key={tag.id.value}
-                    href={TAG_ROUTES.DETAIL(tag.slug.value)}
-                    className="px-3 py-1 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors text-sm"
-                  >
-                    {tag.name.value}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
 
           {/* 本文 */}
           <div className="prose prose-lg w-full lg:max-w-[740px] max-w-none">

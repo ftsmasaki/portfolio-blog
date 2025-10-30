@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import type { Post } from "@/domain/blog/entities";
 import { formatDate } from "@/presentation/utils/format";
+import { TagList } from "@/presentation/components/common/tag-list";
 
 interface PostHeaderProps {
   post: Post;
@@ -70,6 +71,18 @@ export const PostHeader = ({ post }: PostHeaderProps) => {
             </time>
           )}
         </div>
+      </div>
+
+      <div className="mb-6">
+        {/* タグ */}
+        {post.tags.length > 0 && (
+          <TagList
+            tags={post.tags}
+            title={undefined}
+            link={true}
+            showCount={false}
+          />
+        )}
       </div>
 
       {/* 要約 */}
