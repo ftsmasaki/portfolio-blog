@@ -48,6 +48,8 @@ export async function POST(request: NextRequest) {
       revalidatePath("/blog/[slug]", "page");
       revalidatePath("/", "page");
       revalidateTag("posts", "");
+      // 検索ドキュメントのキャッシュも同時に無効化
+      revalidateTag("search-index", "");
       // 投稿に紐づくタグ詳細ページも再検証（任意で tagSlugs を渡す）
       if (Array.isArray(tagSlugs)) {
         for (const slug of tagSlugs) {
