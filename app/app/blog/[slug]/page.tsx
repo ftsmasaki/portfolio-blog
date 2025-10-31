@@ -9,6 +9,7 @@ import { debugDomainEntity } from "@/infrastructure/utils/debug";
 import { htmlToReactElement } from "@/infrastructure/utils/html-to-react";
 import { buildHtmlAndToc } from "@/infrastructure/utils/extract-toc";
 import { Toc } from "@/presentation/components/common/toc";
+import { ShareButtons } from "@/presentation/components/blog/share-buttons";
 import * as React from "react";
 
 // ISR設定: 1時間ごとに再生成
@@ -124,6 +125,15 @@ export default async function BlogPostPage({ params }: PageProps) {
         <article className="min-w-0">
           {/* アイキャッチ画像、タイトル、日時、要約（Shared Element Transition用） */}
           <PostHeader post={post} />
+
+          {/* 共有ボタン */}
+          <ShareButtons
+            title={post.title.value}
+            url={`${
+              process.env.NEXT_PUBLIC_SITE_URL || "https://example.com"
+            }/blog/${post.slug.value}`}
+            site={process.env.NEXT_PUBLIC_SITE_NAME}
+          />
 
           {/* 本文 */}
           <div className="prose prose-lg w-full lg:max-w-[740px] max-w-none">
