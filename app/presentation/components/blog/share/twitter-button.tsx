@@ -2,8 +2,14 @@
 
 import { XIcon } from "@/presentation/components/ui/icons/x";
 import { buildTwitterIntent } from "@/infrastructure/utils/share";
-import type { ShareCoreProps, ShareDoneHandler } from "./common";
-import { BUTTON_BASE, makeUtm } from "./common";
+import type {
+  ShareCoreProps,
+  ShareDoneHandler,
+} from "@/presentation/components/blog/share/common";
+import {
+  BUTTON_BASE,
+  makeUtm,
+} from "@/presentation/components/blog/share/common";
 
 interface TwitterShareButtonProps extends ShareCoreProps {
   onDone?: ShareDoneHandler;

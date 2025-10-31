@@ -2,8 +2,14 @@
 
 import { Copy } from "lucide-react";
 import { buildMarkdownLink } from "@/infrastructure/utils/share";
-import type { ShareCoreProps, ShareDoneHandler } from "./common";
-import { BUTTON_BASE, writeClipboard } from "./common";
+import type {
+  ShareCoreProps,
+  ShareDoneHandler,
+} from "@/presentation/components/blog/share/common";
+import {
+  BUTTON_BASE,
+  writeClipboard,
+} from "@/presentation/components/blog/share/common";
 
 interface CopyMarkdownButtonProps extends ShareCoreProps {
   onDone?: ShareDoneHandler;

@@ -2,7 +2,10 @@
 
 import { Link as LinkIcon } from "lucide-react";
 import { buildPlainText } from "@/infrastructure/utils/share";
-import type { ShareCoreProps, ShareDoneHandler } from "./common";
+import type {
+  ShareCoreProps,
+  ShareDoneHandler,
+} from "@/presentation/components/blog/share/common";
 import { BUTTON_BASE, writeClipboard } from "./common";
 
 interface CopyLinkButtonProps extends ShareCoreProps {

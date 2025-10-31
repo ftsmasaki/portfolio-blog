@@ -31,19 +31,36 @@ export function ShareModal(props: ShareModalProps) {
           {triggerLabel}
         </button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="rounded-md w-[calc(100%-2rem)] max-w-md overflow-hidden bottom-16 translate-y-0">
         <DialogHeader>
           <DialogTitle>この記事を共有</DialogTitle>
         </DialogHeader>
-        <div className="mt-2 flex flex-wrap gap-3">
-          <TwitterShareButton url={url} title={title} site={site} onDone={(_, m) => setMessage(m)} />
-          <CopyLinkButton url={url} title={title} site={site} onDone={(_, m) => setMessage(m)} />
-          <CopyMarkdownButton url={url} title={title} site={site} onDone={(_, m) => setMessage(m)} />
+        <div className="w-full flex justify-center">
+          <div className="mt-2 flex flex-col gap-4">
+            <TwitterShareButton
+              url={url}
+              title={title}
+              site={site}
+              onDone={(_, m) => setMessage(m)}
+            />
+            <CopyLinkButton
+              url={url}
+              title={title}
+              site={site}
+              onDone={(_, m) => setMessage(m)}
+            />
+            <CopyMarkdownButton
+              url={url}
+              title={title}
+              site={site}
+              onDone={(_, m) => setMessage(m)}
+            />
+          </div>
         </div>
-        <p aria-live="polite" className="sr-only">{message}</p>
+        <p aria-live="polite" className="sr-only">
+          {message}
+        </p>
       </DialogContent>
     </Dialog>
   );
 }
-
-
