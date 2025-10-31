@@ -109,7 +109,7 @@ WordPress REST APIとの連携機能の実装
 ### 実装内容
 - WordPress APIクライアントの実装
 - 記事データ取得関数
-- 実績データ取得関数
+- ~~実績データ取得関数~~（削除済み）
 - タグデータ取得関数
 
 ### 主要ファイル
@@ -179,9 +179,11 @@ export const getWordPressPostBySlug = async (
 ### 完了条件
 - ✅ WordPress APIクライアントが実装済み
 - ⏳ 記事取得関数が正常に動作（動作確認待ち）
-- ⏳ 実績取得関数が正常に動作（動作確認待ち）
+- ❌ 実績取得関数が正常に動作（削除済み）
 - ⏳ タグ取得関数が正常に動作（動作確認待ち）
 - ✅ 型チェックエラーが0件
+
+**注意**: 実績取得関数（`getWordPressWorks`, `getWordPressWorkBySlug`）は削除済み
 
 ---
 
@@ -231,14 +233,16 @@ export const mapWordPressPostToDomain = (wpPost: unknown): E.Either<Error, Post>
 
 ### 完了条件
 - ✅ WordPress → Postマッパーが実装済み
-- ✅ WordPress → Workマッパーが実装済み
+- ❌ WordPress → Workマッパーが実装済み（削除済み）
 - ✅ WordPress → Tagマッパーが実装済み
 - ✅ バリデーションが適切に実装
 - ✅ 型チェックエラーが0件
 
+**注意**: 実績マッパー（`wp-to-work.ts`）は削除済み
+
 ---
 
-## ✅ フェーズ2.4: リポジトリ（ブログ・実績・タグ）の実装
+## ❌ フェーズ2.4: リポジトリ（ブログ・実績・タグ）の実装（実績関連は削除済み）
 
 ### 目的
 WordPress APIを利用したリポジトリ実装
@@ -352,9 +356,11 @@ export const wpApiPostRepository: PostRepository = {
 
 ### 完了条件
 - ✅ ブログリポジトリが実装済み
-- ✅ 実績リポジトリが実装済み
+- ❌ 実績リポジトリが実装済み（削除済み）
 - ✅ タグリポジトリが実装済み
 - ✅ 型チェックエラーが0件
+
+**注意**: 実績リポジトリ（`WpApiWorkRepository.ts`）と実績マッパー（`wp-to-work.ts`）は削除済み
 
 ---
 
