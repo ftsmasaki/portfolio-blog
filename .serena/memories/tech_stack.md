@@ -1,0 +1,10 @@
+- Frontend: Next.js 16, React 19, TypeScript 5, App Router
+- Styling: Tailwind CSS v4, tailwindcss-animate, tailwind-merge
+- UI: Radix UI, shadcn (via `make ui-add`)
+- State/Data: TanStack Query, Zustand, fp-ts
+- Content: WordPress REST API, rehype ecosystem, shiki
+- Backend: Next.js API Routes + Hono (planned/allowed)
+- Dev Tools: ESLint 9 + eslint-config-next, Prettier, Vitest 4, Vite 6
+- Fonts: Noto Sans JP (via Next font optimization)
+- DI: tsyringe
+- Icons: lucide-react

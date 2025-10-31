@@ -1,0 +1,4 @@
+- Purpose: Next.js-based portfolio blog consuming WordPress REST API, following clean architecture and functional programming principles.
+- Entrypoint: Next.js App Router app with `app` workspace.
+- Host OS: Linux (WSL2).
+- Notable policies: phased implementation with mandatory user verification, change-log after each phase, strict TypeScript, no `any`, absolute imports (`@/*`).

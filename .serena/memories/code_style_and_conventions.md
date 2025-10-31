@@ -1,0 +1,12 @@
+- TypeScript: strict, noEmit during type-check, moduleResolution=bundler, path alias `@/*` -> app root
+- React: Functional components, server components preferred, minimal "use client"
+- Architecture: Clean Architecture + Functional Domain Modeling; separation into `domain`, `application`, `infrastructure`, `presentation`, `shared`
+- Naming:
+  - Components: UpperCamelCase; files kebab-case
+  - Pages: `page.tsx`, `layout.tsx`
+  - Types: prefer `interface`
+- Error handling: avoid bare try/catch; functional error patterns preferred
+- Imports: absolute paths preferred; group external first
+- Lint/format: ESLint 9 + eslint-config-next, Prettier
+- Testing: Vitest; test files `*.{test,spec}.{ts,tsx}` (see vitest config)
+- Prohibited: `any`, inline styles, Promise chains; prefer async/await
