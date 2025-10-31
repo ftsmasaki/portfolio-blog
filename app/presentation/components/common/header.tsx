@@ -17,14 +17,12 @@ import {
 import {
   COMMON_ROUTES,
   BLOG_ROUTES,
-  WORK_ROUTES,
   TAG_ROUTES,
 } from "@/shared/constants/routes";
 
 const navItems = [
   { label: "ホーム", href: COMMON_ROUTES.HOME },
   { label: "ブログ", href: BLOG_ROUTES.INDEX },
-  { label: "実績", href: WORK_ROUTES.INDEX },
   { label: "タグ", href: TAG_ROUTES.INDEX },
   { label: "自己紹介", href: COMMON_ROUTES.ABOUT },
 ];

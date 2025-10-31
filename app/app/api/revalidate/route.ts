@@ -36,10 +36,6 @@ export async function POST(request: NextRequest) {
       revalidatePath("/blog/[slug]", "page");
       revalidatePath("/", "page");
       revalidateTag("posts", "");
-    } else if (type === "work") {
-      revalidatePath("/works", "page");
-      revalidatePath("/works/[slug]", "page");
-      revalidateTag("works", "");
     } else if (type === "tag") {
       revalidatePath("/tags", "page");
       revalidatePath("/blog", "page");

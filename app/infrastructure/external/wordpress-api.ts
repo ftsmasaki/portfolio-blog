@@ -157,68 +157,6 @@ export const getWordPressPostBySlug = async (
 };
 
 /**
- * 実績一覧を取得する関数
- * カスタム投稿タイプ 'works' を想定
- *
- * @param baseUrl - WordPressのベースURL
- * @param page - ページ番号
- * @param perPage - 1ページあたりの実績数
- * @returns WordPress実績の配列
- */
-export const getWordPressWorks = async (
-  baseUrl: string,
-  page: number = 1,
-  perPage: number = 10
-): Promise<E.Either<WordPressApiError, WordPressPost[]>> => {
-  const url = `${baseUrl}/wp-json/wp/v2/works?page=${page}&per_page=${perPage}&_embed=true`;
-
-  return pipe(
-    await httpClient.get<WordPressPost[]>(url),
-    E.map(response => response.data),
-    E.mapLeft(
-      (httpError: HttpError): WordPressApiError => ({
-        message: httpError.message,
-        status: httpError.status,
-      })
-    )
-  );
-};
-
-/**
- * スラッグで実績を取得する関数
- *
- * @param baseUrl - WordPressのベースURL
- * @param slug - 実績のスラッグ
- * @returns WordPress実績
- */
-export const getWordPressWorkBySlug = async (
-  baseUrl: string,
-  slug: string
-): Promise<E.Either<WordPressApiError, WordPressPost>> => {
-  const url = `${baseUrl}/wp-json/wp/v2/works?slug=${slug}&_embed=true`;
-
-  return pipe(
-    await httpClient.get<WordPressPost[]>(url),
-    E.map(response => response.data),
-    E.chain(posts => {
-      if (posts.length === 0) {
-        return E.left<WordPressApiError, WordPressPost>({
-          message: "Work not found",
-          status: 404,
-        });
-      }
-      return E.right(posts[0]);
-    }),
-    E.mapLeft(
-      (httpError: HttpError): WordPressApiError => ({
-        message: httpError.message,
-        status: httpError.status,
-      })
-    )
-  );
-};
-
-/**
  * タグ一覧を取得する関数
  *
  * @param baseUrl - WordPressのベースURL

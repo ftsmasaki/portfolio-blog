@@ -15,14 +15,6 @@ export const BLOG_ROUTES = {
 } as const;
 
 /**
- * 実績ページルート
- */
-export const WORK_ROUTES = {
-  INDEX: "/works",
-  DETAIL: (slug: string) => `/works/${slug}`,
-} as const;
-
-/**
  * タグページルート
  */
 export const TAG_ROUTES = {

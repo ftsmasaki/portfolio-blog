@@ -20,18 +20,6 @@ export const queryKeys = {
   },
 
   /**
-   * 実績のQuery Keys
-   */
-  works: {
-    all: ["works"] as const,
-    lists: () => [...queryKeys.works.all, "list"] as const,
-    list: (filters: string) =>
-      [...queryKeys.works.lists(), { filters }] as const,
-    details: () => [...queryKeys.works.all, "detail"] as const,
-    detail: (slug: string) => [...queryKeys.works.details(), slug] as const,
-  },
-
-  /**
    * タグのQuery Keys
    */
   tags: {
