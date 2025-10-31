@@ -755,15 +755,16 @@ export default async function TagsPage() {
 
 フェーズ2.7で実装した `/api/revalidate` エンドポイントが、以下の場合にブログページを再生成します：
 - `type: 'post'` が送信された場合: `/blog`, `/blog/[slug]`, `/` が再生成
-- `type: 'tag'` が送信された場合: `/tags`, `/blog` が再生成
+- `type: 'tag'` が送信された場合: `/tags`, `/blog` に加え、`tagSlug` が渡されたら `/tags/{tagSlug}` を再生成
+- `type: 'post'` で `tagSlugs: string[]` が渡された場合: 紐づく各 `/tags/{slug}` も再生成
 
 ### 完了条件
 - ✅ ブログ記事一覧ページでISRが有効化
 - ✅ ブログ記事詳細ページでISRが有効化
-- ⏳ タグ一覧ページでISRが有効化（フェーズ5.9で実装予定）
-- ⏳ タグ詳細ページでISRが有効化（フェーズ5.9で実装予定）
+- ✅ タグ一覧ページでISRが有効化
+- ✅ タグ詳細ページでISRが有効化
 - ✅ generateStaticParamsが実装済み（詳細ページのみ）
-- ✅ WordPress更新時に自動再生成される（既存のOn-Demand Revalidation APIと連携済み）
+- ✅ WordPress更新時に自動再生成される（On-Demand Revalidation API連携済み／タグにも対応）
 - ✅ 型チェックエラーが0件
 
 ---

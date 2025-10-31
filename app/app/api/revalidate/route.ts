@@ -16,7 +16,19 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { type, path, tag } = body;
+    const {
+      type,
+      path,
+      tag,
+      tagSlug,
+      tagSlugs,
+    }: {
+      type?: string;
+      path?: string;
+      tag?: string;
+      tagSlug?: string;
+      tagSlugs?: string[];
+    } = body;
 
     // パスベースのリアバリデーション
     if (path) {
@@ -36,10 +48,22 @@ export async function POST(request: NextRequest) {
       revalidatePath("/blog/[slug]", "page");
       revalidatePath("/", "page");
       revalidateTag("posts", "");
+      // 投稿に紐づくタグ詳細ページも再検証（任意で tagSlugs を渡す）
+      if (Array.isArray(tagSlugs)) {
+        for (const slug of tagSlugs) {
+          if (typeof slug === "string" && slug.length > 0) {
+            revalidatePath(`/tags/${slug}`, "page");
+          }
+        }
+      }
     } else if (type === "tag") {
       revalidatePath("/tags", "page");
       revalidatePath("/blog", "page");
       revalidateTag("tags", "");
+      // 単一のタグ詳細ページが更新された場合（tagSlug を渡す）
+      if (typeof tagSlug === "string" && tagSlug.length > 0) {
+        revalidatePath(`/tags/${tagSlug}`, "page");
+      }
     }
 
     return NextResponse.json({
