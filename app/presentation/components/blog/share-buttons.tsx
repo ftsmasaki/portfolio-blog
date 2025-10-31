@@ -7,7 +7,8 @@ import {
   buildTwitterIntent,
 } from "@/infrastructure/utils/share";
 import type { UTMOptions } from "@/infrastructure/utils/share";
-import { Twitter, Link as LinkIcon, ClipboardCheck, Copy } from "lucide-react";
+import { Link as LinkIcon, Copy } from "lucide-react";
+import { XIcon } from "@/presentation/components/ui/icons/x";
 
 export interface ShareButtonsProps {
   url: string;
@@ -69,7 +70,7 @@ export function ShareButtons(props: ShareButtonsProps) {
         className={BUTTON_BASE}
         aria-label="Xで共有"
       >
-        <Twitter className="h-4 w-4" />
+        <XIcon className="h-4 w-4" />
         <span>Xで共有</span>
       </button>
       <button
