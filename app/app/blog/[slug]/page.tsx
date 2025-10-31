@@ -2,6 +2,7 @@ import { getPosts, getPostBySlug } from "@/application/di/usecases";
 import { extractRelatedPosts } from "@/application/services";
 import { PostCard } from "@/presentation/components/blog/post-card";
 import { PostHeader } from "@/presentation/components/blog/post-header";
+import { PostFooter } from "@/presentation/components/blog/post-footer";
 import { EnhancedCodeBlock } from "@/presentation/components/blog/enhanced-code-block";
 import type { Post } from "@/domain/blog/entities";
 import { notFound } from "next/navigation";
@@ -160,17 +161,19 @@ export default async function BlogPostPage({ params }: PageProps) {
           {/* アイキャッチ画像、タイトル、日時、要約（Shared Element Transition用） */}
           <PostHeader post={post} />
 
-          {/* 共有ボタン */}
-          <ShareButtons
+          {/* 共有ボタン（従来の行は削除。フッター側でモーダルを表示） */}
+
+          {/* 本文 */}
+          <div className="prose prose-lg w-full">{contentElement}</div>
+
+          {/* フッター（分割線 + 共有モーダル） */}
+          <PostFooter
             title={post.title.value}
             url={`${
               process.env.NEXT_PUBLIC_SITE_URL || "https://example.com"
             }/blog/${post.slug.value}`}
             site={process.env.NEXT_PUBLIC_SITE_NAME}
           />
-
-          {/* 本文 */}
-          <div className="prose prose-lg w-full">{contentElement}</div>
 
           {/* 関連記事 */}
           {relatedPosts.length > 0 && (
