@@ -5,6 +5,9 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { ThemeToggle } from "./theme-toggle";
+import { SearchModalTrigger } from "@/presentation/components/common/search-modal-trigger";
+import { SearchModal } from "@/presentation/components/common/search-modal";
+import type { SearchableDocument } from "@/infrastructure/search/search-index";
 import { cn } from "@/presentation/utils";
 import {
   Sheet,
@@ -34,6 +37,8 @@ const navItems = [
 export function Header() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const documents: SearchableDocument[] = [];
 
   const isActive = (href: string) => {
     if (href === COMMON_ROUTES.HOME) {
@@ -72,6 +77,11 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
+          {/* Search Trigger (Desktop) - ThemeToggle の左 */}
+          <div className="hidden md:block">
+            <SearchModalTrigger onOpen={() => setSearchOpen(true)} />
+          </div>
+
           <ThemeToggle />
 
           {/* Mobile Menu */}
@@ -106,6 +116,13 @@ export function Header() {
           </Sheet>
         </div>
       </div>
+
+      {/* Search Modal */}
+      <SearchModal
+        open={searchOpen}
+        onOpenChange={setSearchOpen}
+        documents={documents}
+      />
     </header>
   );
 }
