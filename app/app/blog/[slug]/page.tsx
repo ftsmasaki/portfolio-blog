@@ -40,7 +40,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const result = await getPostBySlug(slug)();
 
@@ -55,7 +57,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Portfolio Blog";
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://example.com";
   const url = new URL(`/blog/${post.slug.value}`, baseUrl).toString();
-  const ogImage = new URL(`/blog/${post.slug.value}/opengraph-image`, baseUrl).toString();
+  const ogImage = new URL(
+    `/blog/${post.slug.value}/opengraph-image`,
+    baseUrl
+  ).toString();
 
   return {
     title: post.title.value,
@@ -165,9 +170,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           />
 
           {/* 本文 */}
-          <div className="prose prose-lg w-full lg:max-w-[740px] max-w-none">
-            {contentElement}
-          </div>
+          <div className="prose prose-lg w-full">{contentElement}</div>
 
           {/* 関連記事 */}
           {relatedPosts.length > 0 && (
