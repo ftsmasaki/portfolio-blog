@@ -73,22 +73,22 @@ sequenceDiagram
 
 ## 実装計画（段階的フェーズ構成）
 
-### フェーズ5.7.1: 共有ボタン最小実装
+### ✅ フェーズ5.7.1: 共有ボタン最小実装
 - X(Twitter), クリップボードコピー, Markdownリンクコピー, Notion/Slack/Discord向け整形コピーを実装
 - クリック時にUTMクエリを付与（例: utm_source, utm_medium, utm_campaign）
 - 成功/失敗トースト（暫定: consoleは不可。UIのトーストがあればそれを使用）
 
-### フェーズ5.7.2: OGP画像自動生成（動的）
+### ✅ フェーズ5.7.2: OGP画像自動生成（動的）
 - 記事ごとのOGP画像を動的生成
 - 対応案A: App Routerの `opengraph-image.tsx`（セグメントごと）で `ImageResponse` を返却
 - 対応案B: API Route（例: `/api/og`）で生成し、メタから参照
 - フォント（Noto Sans JP）組込、テーマ（dark）に準拠、タイトル/著者/日付/タグ等をレイアウト
 
-### フェーズ5.7.3: OGPメタデータ整備
+### ✅ フェーズ5.7.3: OGPメタデータ整備
 - 記事単位の `og:title`, `og:description`, `og:image`, `twitter:card` を生成
 - 既存エンティティから値を生成（空の場合のフォールバック戦略定義）
 
-### フェーズ5.7.4: UX最適化/アクセシビリティ
+### ✅ フェーズ5.7.4: UX最適化/アクセシビリティ
 - ボタン群のキーボード操作/aria-label整備
 - レイアウト/表示位置（記事上/下/サイド）検討と配置
 
