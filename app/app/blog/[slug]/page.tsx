@@ -5,6 +5,7 @@ import { PostHeader } from "@/presentation/components/blog/post-header";
 import { EnhancedCodeBlock } from "@/presentation/components/blog/enhanced-code-block";
 import type { Post } from "@/domain/blog/entities";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { debugDomainEntity } from "@/infrastructure/utils/debug";
 import { htmlToReactElement } from "@/infrastructure/utils/html-to-react";
 import { buildHtmlAndToc } from "@/infrastructure/utils/extract-toc";
@@ -39,7 +40,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const result = await getPostBySlug(slug)();
 
@@ -51,9 +52,37 @@ export async function generateMetadata({ params }: PageProps) {
 
   const post = result.right;
 
+  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Portfolio Blog";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://example.com";
+  const url = new URL(`/blog/${post.slug.value}`, baseUrl).toString();
+  const ogImage = new URL(`/blog/${post.slug.value}/opengraph-image`, baseUrl).toString();
+
   return {
     title: post.title.value,
     description: post.excerpt.value,
+    alternates: { canonical: url },
+    openGraph: {
+      title: post.title.value,
+      description: post.excerpt.value,
+      type: "article",
+      url,
+      siteName,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          type: "image/png",
+          alt: `${post.title.value} | ${siteName}`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title.value,
+      description: post.excerpt.value,
+      images: [ogImage],
+    },
   };
 }
 
