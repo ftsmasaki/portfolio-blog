@@ -38,7 +38,7 @@ export const PostHeader = ({ post }: PostHeaderProps) => {
       {/* タイトル */}
       <motion.h1
         layoutId={`post-title-${post.id.value}`}
-        className="text-4xl font-bold mb-4"
+        className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{
