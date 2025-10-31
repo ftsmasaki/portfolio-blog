@@ -58,7 +58,7 @@ export const SearchModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden sm:top-16 sm:translate-y-0">
+      <DialogContent className="rounded-md w-[calc(100%-2rem)] max-w-2xl max-h-[80vh] overflow-hidden top-16 translate-y-0 p-4 sm:p-6">
         <DialogHeader>
           <DialogTitle>記事を検索</DialogTitle>
           <DialogDescription>
