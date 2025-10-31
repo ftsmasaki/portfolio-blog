@@ -8,6 +8,7 @@ import { ThemeToggle } from "./theme-toggle";
 import { SearchModalTrigger } from "@/presentation/components/common/search-modal-trigger";
 import { SearchModal } from "@/presentation/components/common/search-modal";
 import type { SearchableDocument } from "@/infrastructure/search/search-index";
+import { useSearchDocuments } from "@/presentation/hooks/use-search-documents";
 import { cn } from "@/presentation/utils";
 import {
   Sheet,
@@ -17,6 +18,8 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/presentation/components/ui/sheet";
+import { Button } from "@/presentation/components/ui/button";
+import { Search } from "lucide-react";
 import {
   COMMON_ROUTES,
   BLOG_ROUTES,
@@ -38,7 +41,7 @@ export function Header() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const documents: SearchableDocument[] = [];
+  const { documents } = useSearchDocuments(searchOpen);
 
   const isActive = (href: string) => {
     if (href === COMMON_ROUTES.HOME) {
@@ -77,6 +80,18 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
+          {/* Search Trigger (Mobile icon-only) */}
+          <div className="md:hidden">
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="記事を検索"
+              onClick={() => setSearchOpen(true)}
+            >
+              <Search className="h-5 w-5" />
+            </Button>
+          </div>
+
           {/* Search Trigger (Desktop) - ThemeToggle の左 */}
           <div className="hidden md:block">
             <SearchModalTrigger onOpen={() => setSearchOpen(true)} />

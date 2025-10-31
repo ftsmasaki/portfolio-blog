@@ -29,17 +29,19 @@ export const SearchModal = ({
   documents,
 }: SearchModalProps) => {
   const [results, setResults] = useState<SearchableDocument[]>(documents);
+  const [query, setQuery] = useState("");
 
   const indexEither = useMemo(() => createSearchIndex(documents), [documents]);
 
-  const handleSearch = (query: string) => {
-    if (!query) {
+  const handleSearch = (q: string) => {
+    setQuery(q);
+    if (!q) {
       setResults(documents);
       return;
     }
 
     if (E.isRight(indexEither)) {
-      const idsEither = searchInIndex(indexEither.right, query);
+      const idsEither = searchInIndex(indexEither.right, q);
       if (E.isRight(idsEither)) {
         const idSet = new Set(idsEither.right);
         const filtered = documents.filter(d => idSet.has(d.id));
@@ -56,7 +58,7 @@ export const SearchModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden">
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden sm:top-16 sm:translate-y-0">
         <DialogHeader>
           <DialogTitle>記事を検索</DialogTitle>
           <DialogDescription>
@@ -64,8 +66,17 @@ export const SearchModal = ({
           </DialogDescription>
         </DialogHeader>
         <div className="mt-4 space-y-4">
-          <SearchBar onSearch={handleSearch} />
-          <SearchResult documents={results.length ? results : initialResults} />
+          <SearchBar key={open ? "open" : "closed"} onSearch={handleSearch} />
+          {query && results.length > 0 ? (
+            <SearchResult
+              documents={results}
+              onItemClick={() => {
+                setQuery("");
+                setResults(documents);
+                onOpenChange(false);
+              }}
+            />
+          ) : null}
         </div>
       </DialogContent>
     </Dialog>

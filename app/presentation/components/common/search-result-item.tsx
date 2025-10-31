@@ -5,11 +5,12 @@ import { BLOG_ROUTES } from "@/shared/constants/routes";
 
 interface ResultItemProps {
   document: SearchableDocument;
+  onClick?: () => void;
 }
 
-export const SearchResultItem = ({ document }: ResultItemProps) => {
+export const SearchResultItem = ({ document, onClick }: ResultItemProps) => {
   return (
-    <Link href={BLOG_ROUTES.POST(document.slug)}>
+    <Link href={BLOG_ROUTES.POST(document.slug)} onClick={onClick}>
       <Card className="hover:bg-accent transition-colors">
         <CardContent className="p-4">
           <h3 className="font-semibold line-clamp-1">{document.title}</h3>
