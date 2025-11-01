@@ -39,7 +39,11 @@ export const PostCard = ({ post }: PostCardProps) => {
   }, [post]);
 
   return (
-    <Link href={BLOG_ROUTES.POST(post.slug.value)} scroll={false}>
+    <Link
+      href={BLOG_ROUTES.POST(post.slug.value)}
+      scroll={false}
+      className="block h-full"
+    >
       <motion.article
         layoutId={`post-${post.id.value}`}
         initial={{ opacity: 0, y: 20 }}
@@ -47,6 +51,7 @@ export const PostCard = ({ post }: PostCardProps) => {
         exit={{ opacity: 0, y: -20 }}
         whileHover={{ y: -4 }}
         transition={{ duration: 0.15, ease: "easeOut" }}
+        className="h-full"
       >
         <Card className="h-full min-h-[420px] flex flex-col overflow-hidden cursor-pointer group hover:shadow-lg transition-shadow">
           <div className="relative w-full aspect-video overflow-hidden bg-muted">
@@ -81,15 +86,15 @@ export const PostCard = ({ post }: PostCardProps) => {
                 {formatDate(post.createdAt.value)}
               </motion.time>
             </div>
-            {post.tags.length > 0 && (
-              <motion.div
-                layoutId={`post-tags-${post.id.value}`}
-                className="mt-2"
-                transition={{ layout: { duration: 0.2, ease: "easeOut" } }}
-              >
+            <motion.div
+              layoutId={`post-tags-${post.id.value}`}
+              className="mt-2 min-h-[24px]"
+              transition={{ layout: { duration: 0.2, ease: "easeOut" } }}
+            >
+              {post.tags.length > 0 ? (
                 <TagList tags={post.tags} showCount={false} link={false} />
-              </motion.div>
-            )}
+              ) : null}
+            </motion.div>
           </CardHeader>
           <CardContent className="shrink-0 pb-6">
             <motion.p
