@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { publicEnv } from "@/config/env";
 
 /**
  * ページのメタデータを生成する関数
@@ -12,10 +13,10 @@ export const generateMetadata = (
   description: string,
   path?: string
 ): Metadata => {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://example.com";
+  const siteUrl = publicEnv.NEXT_PUBLIC_SITE_URL;
   const url = path ? `${siteUrl}${path}` : siteUrl;
   const titleTemplate = path
-    ? `${title} | ${process.env.NEXT_PUBLIC_SITE_NAME}`
+    ? `${title} | ${publicEnv.NEXT_PUBLIC_SITE_NAME}`
     : title;
 
   return {
@@ -25,7 +26,7 @@ export const generateMetadata = (
       title: titleTemplate,
       description,
       url,
-      siteName: process.env.NEXT_PUBLIC_SITE_NAME || "Portfolio Blog",
+      siteName: publicEnv.NEXT_PUBLIC_SITE_NAME,
       type: "website",
     },
     twitter: {
@@ -82,7 +83,7 @@ export const generateArticleStructuredData = (
     },
     publisher: {
       "@type": "Organization",
-      name: process.env.NEXT_PUBLIC_SITE_NAME || "Portfolio Blog",
+      name: publicEnv.NEXT_PUBLIC_SITE_NAME,
     },
     ...(image && { image }),
   });
@@ -96,7 +97,7 @@ export const generateArticleStructuredData = (
 export const generateBreadcrumbStructuredData = (
   items: Array<{ name: string; path: string }>
 ): string => {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://example.com";
+  const siteUrl = publicEnv.NEXT_PUBLIC_SITE_URL;
 
   return generateStructuredData("BreadcrumbList", {
     itemListElement: items.map((item, index) => ({

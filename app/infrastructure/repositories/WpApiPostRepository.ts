@@ -9,6 +9,7 @@ import {
   getWordPressPostBySlug,
   getWordPressPostsByTagId,
 } from "@/infrastructure/external/wordpress-api";
+import { serverEnv } from "@/config/env";
 import {
   mapWordPressPostToDomain,
   mapWordPressPostsToDomain,
@@ -25,7 +26,7 @@ export const wpApiPostRepository: PostRepository = {
     return pipe(
       TE.tryCatch(
         async () => {
-          const baseUrl = process.env.WORDPRESS_URL || "";
+          const baseUrl = serverEnv.WORDPRESS_URL;
           const result = await getWordPressPosts(baseUrl);
 
           if (E.isLeft(result)) {
@@ -62,7 +63,7 @@ export const wpApiPostRepository: PostRepository = {
     return pipe(
       TE.tryCatch(
         async () => {
-          const baseUrl = process.env.WORDPRESS_URL || "";
+          const baseUrl = serverEnv.WORDPRESS_URL || "";
           const result = await getWordPressPostBySlug(baseUrl, slug);
 
           if (E.isLeft(result)) {
@@ -114,11 +115,13 @@ export const wpApiPostRepository: PostRepository = {
     return pipe(
       TE.tryCatch(
         async () => {
-          const baseUrl = process.env.WORDPRESS_URL || "";
+          const baseUrl = serverEnv.WORDPRESS_URL || "";
           const result = await getWordPressPostsByTagId(baseUrl, tagId);
 
           if (E.isLeft(result)) {
-            throw new Error(`Failed to fetch posts by tagId: ${result.left.message}`);
+            throw new Error(
+              `Failed to fetch posts by tagId: ${result.left.message}`
+            );
           }
 
           return result.right;

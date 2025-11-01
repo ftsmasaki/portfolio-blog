@@ -12,6 +12,7 @@ const ServerEnvSchema = z.object({
     z.number().int().positive().optional()
   ),
   DEBUG_WORDPRESS_API: z.enum(["0", "1"]).optional(),
+  NODE_ENV: z.enum(["development", "test", "production"]).optional(),
 });
 
 // クライアントへ公開される環境変数（NEXT_PUBLIC_*）
@@ -39,4 +40,12 @@ export function validateEnv(): AppEnv {
  * アプリ内で使用する型付きenv。利用側はこのモジュールから参照する。
  * 直接 process.env にアクセスしないこと。
  */
-export const env: AppEnv = validateEnv();
+const __parsed = ((): { server: ServerEnv; pub: PublicEnv } => {
+  const server = ServerEnvSchema.parse(process.env);
+  const pub = PublicEnvSchema.parse(process.env);
+  return { server, pub };
+})();
+
+export const serverEnv: ServerEnv = __parsed.server;
+export const publicEnv: PublicEnv = __parsed.pub;
+export const env: AppEnv = { ...__parsed.server, ...__parsed.pub };

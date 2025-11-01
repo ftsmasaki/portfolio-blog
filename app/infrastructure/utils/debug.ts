@@ -1,6 +1,7 @@
 /**
  * デバッグ出力用ユーティリティ
  */
+import { serverEnv } from "@/config/env";
 
 /**
  * デバッグモードが有効かどうかを判定
@@ -8,16 +9,16 @@
  * NODE_ENV が "development" の場合は true を返す
  */
 export const isDebugMode = (): boolean => {
-  const debugEnv = process.env.DEBUG_WORDPRESS_API;
-  const isDevelopment = process.env.NODE_ENV === "development";
+  const debugEnv = serverEnv.DEBUG_WORDPRESS_API;
+  const isDevelopment = serverEnv.NODE_ENV === "development";
 
   // 明示的に false が設定されている場合は false
-  if (debugEnv === "false") {
+  if (debugEnv === "0") {
     return false;
   }
 
   // 明示的に true が設定されている場合、または開発環境の場合は true
-  return debugEnv === "true" || isDevelopment;
+  return debugEnv === "1" || isDevelopment;
 };
 
 /**

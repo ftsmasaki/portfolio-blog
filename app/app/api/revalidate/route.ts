@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { serverEnv } from "@/config/env";
 
 /**
  * WordPress On-Demand RevalidationプラグインからのWebhookを受信
@@ -8,7 +9,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 export async function POST(request: NextRequest) {
   // セキュリティトークンの検証
   const secret = request.headers.get("x-revalidate-secret");
-  const expectedSecret = process.env.REVALIDATE_SECRET;
+  const expectedSecret = serverEnv.REVALIDATE_SECRET;
 
   if (secret !== expectedSecret) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

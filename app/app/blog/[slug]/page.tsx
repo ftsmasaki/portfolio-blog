@@ -12,6 +12,7 @@ import { htmlToReactElement } from "@/infrastructure/utils/html-to-react";
 import { buildHtmlAndToc } from "@/infrastructure/utils/extract-toc";
 import { Toc } from "@/presentation/components/common/toc";
 import * as React from "react";
+import { publicEnv } from "@/config/env";
 
 // ISR設定: 1時間ごとに再生成
 export const revalidate = 3600;
@@ -54,8 +55,8 @@ export async function generateMetadata({
 
   const post = result.right;
 
-  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Portfolio Blog";
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://example.com";
+  const siteName = publicEnv.NEXT_PUBLIC_SITE_NAME;
+  const baseUrl = publicEnv.NEXT_PUBLIC_SITE_URL;
   const url = new URL(`/blog/${post.slug.value}`, baseUrl).toString();
   const featured = post.featuredImage?.value;
 
@@ -167,9 +168,9 @@ export default async function BlogPostPage({ params }: PageProps) {
           <PostFooter
             title={post.title.value}
             url={`${
-              process.env.NEXT_PUBLIC_SITE_URL || "https://example.com"
+              publicEnv.NEXT_PUBLIC_SITE_URL || "https://example.com"
             }/blog/${post.slug.value}`}
-            site={process.env.NEXT_PUBLIC_SITE_NAME}
+            site={publicEnv.NEXT_PUBLIC_SITE_NAME}
           />
 
           {/* 関連記事 */}

@@ -18,6 +18,13 @@ module.exports = {
       files: ["config/env.ts", "scripts/check-env.js"],
       rules: {
         "no-restricted-properties": "off",
+        "@typescript-eslint/no-require-imports": "off",
+      },
+    },
+    {
+      files: ["scripts/*.js"],
+      rules: {
+        "@typescript-eslint/no-require-imports": "off",
       },
     },
   ],

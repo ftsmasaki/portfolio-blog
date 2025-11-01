@@ -12,6 +12,7 @@ import {
   mapWordPressTagToDomain,
   mapWordPressTagsToDomain,
 } from "@/infrastructure/mappers/wp-to-tag";
+import { serverEnv } from "@/config/env";
 
 /**
  * WordPress APIを利用したタグリポジトリ
@@ -24,7 +25,7 @@ export const wpApiTagRepository: TagRepository = {
     return pipe(
       TE.tryCatch(
         async () => {
-          const baseUrl = process.env.WORDPRESS_URL || "";
+          const baseUrl = serverEnv.WORDPRESS_URL;
           const result = await getWordPressTags(baseUrl);
 
           if (E.isLeft(result)) {
@@ -61,7 +62,7 @@ export const wpApiTagRepository: TagRepository = {
     return pipe(
       TE.tryCatch(
         async () => {
-          const baseUrl = process.env.WORDPRESS_URL || "";
+          const baseUrl = serverEnv.WORDPRESS_URL || "";
           const result = await getWordPressTagBySlug(baseUrl, slug);
 
           if (E.isLeft(result)) {

@@ -5,6 +5,7 @@ import { QueryProvider } from "@/presentation/components/providers/query-provide
 import { Header } from "@/presentation/components/common/header";
 import { Footer } from "@/presentation/components/common/footer";
 import "@/app/globals.css";
+import { publicEnv } from "@/config/env";
 
 const notoSansJP = Noto_Sans_JP({
   weight: ["400", "700"],
@@ -15,9 +16,7 @@ const notoSansJP = Noto_Sans_JP({
 export const metadata: Metadata = {
   title: "Portfolio Blog",
   description: "ポートフォリオブログサイト",
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://example.com"
-  ),
+  metadataBase: new URL(publicEnv.NEXT_PUBLIC_SITE_URL),
 };
 
 export default function RootLayout({

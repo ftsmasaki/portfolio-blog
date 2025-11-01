@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { serverEnv } from "@/config/env";
 import type { SearchableDocument } from "@/infrastructure/search/search-index";
 
 export const runtime = "nodejs";
@@ -23,13 +24,7 @@ function stripHtml(html: string): string {
 }
 
 export async function GET() {
-  const baseUrl = process.env.WORDPRESS_URL || "";
-  if (!baseUrl) {
-    return NextResponse.json(
-      { error: "WORDPRESS_URL is not configured" },
-      { status: 503 }
-    );
-  }
+  const baseUrl = serverEnv.WORDPRESS_URL;
 
   try {
     const perPage = 100; // 調整可能。必要に応じてページネーション対応

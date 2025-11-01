@@ -1,5 +1,6 @@
 import * as E from "fp-ts/Either";
 import { tryCatch } from "fp-ts/TaskEither";
+import { serverEnv } from "@/config/env";
 
 /**
  * HTTPレスポンス型
@@ -39,7 +40,7 @@ export const httpClient = {
         const controller = new AbortController();
         const timeoutMs =
           options?.timeoutMs ??
-          Number(process.env.WORDPRESS_FETCH_TIMEOUT_MS ?? 15000);
+          Number(serverEnv.WORDPRESS_FETCH_TIMEOUT_MS ?? 15000);
         const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
         const response = await fetch(url, {
@@ -90,7 +91,7 @@ export const httpClient = {
         const controller = new AbortController();
         const timeoutMs =
           options?.timeoutMs ??
-          Number(process.env.WORDPRESS_FETCH_TIMEOUT_MS ?? 15000);
+          Number(serverEnv.WORDPRESS_FETCH_TIMEOUT_MS ?? 15000);
         const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
         const response = await fetch(url, {

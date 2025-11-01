@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-require-imports */
 // 環境変数の事前検証スクリプト（dev/build/type-check前に実行）
 // - .env.* を読み込むため dotenv を使用
 // - zodスキーマはアプリの config/env.ts と同等の要件でバリデーション
@@ -16,8 +16,10 @@ const nonEmptyString = z.string().min(1);
 const ServerEnvSchema = z.object({
   WORDPRESS_URL: nonEmptyString,
   REVALIDATE_SECRET: z.string().optional(),
-  WORDPRESS_FETCH_TIMEOUT_MS: z
-    .preprocess(v => (v == null || v === "" ? undefined : Number(v)), z.number().int().positive().optional()),
+  WORDPRESS_FETCH_TIMEOUT_MS: z.preprocess(
+    v => (v == null || v === "" ? undefined : Number(v)),
+    z.number().int().positive().optional()
+  ),
   DEBUG_WORDPRESS_API: z.enum(["0", "1"]).optional(),
 });
 
@@ -42,9 +44,10 @@ try {
       console.error(` - ${issue.path.join(".")}: ${issue.message}`);
     }
   } else {
-    console.error("[env] Unexpected error:", e instanceof Error ? e.message : String(e));
+    console.error(
+      "[env] Unexpected error:",
+      e instanceof Error ? e.message : String(e)
+    );
   }
   process.exit(1);
 }
-
-
