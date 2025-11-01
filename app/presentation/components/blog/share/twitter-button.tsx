@@ -1,6 +1,8 @@
 "use client";
 
+import * as React from "react";
 import { XIcon } from "@/presentation/components/ui/icons/x";
+import { Check } from "lucide-react";
 import { buildTwitterIntent } from "@/infrastructure/utils/share";
 import type {
   ShareCoreProps,
@@ -18,6 +20,9 @@ interface TwitterShareButtonProps extends ShareCoreProps {
 
 export function TwitterShareButton(props: TwitterShareButtonProps) {
   const { url, title, site, onDone, className } = props;
+  const [isChecked, setIsChecked] = React.useState(false);
+  const timeoutRef = React.useRef<number | null>(null);
+
   const onClick = () => {
     const intent = buildTwitterIntent({
       url,
@@ -27,14 +32,30 @@ export function TwitterShareButton(props: TwitterShareButtonProps) {
     });
     window.open(intent, "_blank", "noopener,noreferrer");
     onDone?.("success", "Xの投稿画面を開きました");
+    setIsChecked(true);
+    if (timeoutRef.current) {
+      window.clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = window.setTimeout(() => {
+      setIsChecked(false);
+      timeoutRef.current = null;
+    }, 1500);
   };
+
+  React.useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        window.clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
   return (
     <button
       onClick={onClick}
       className={`${BUTTON_BASE} ${className ?? ""}`}
       aria-label="Xで共有"
     >
-      <XIcon className="h-4 w-4" />
+      {isChecked ? <Check className="h-4 w-4" /> : <XIcon className="h-4 w-4" />}
       <span>Xで共有</span>
     </button>
   );

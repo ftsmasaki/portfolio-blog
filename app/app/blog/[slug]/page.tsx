@@ -11,7 +11,6 @@ import { debugDomainEntity } from "@/infrastructure/utils/debug";
 import { htmlToReactElement } from "@/infrastructure/utils/html-to-react";
 import { buildHtmlAndToc } from "@/infrastructure/utils/extract-toc";
 import { Toc } from "@/presentation/components/common/toc";
-import { ShareButtons } from "@/presentation/components/blog/share-buttons";
 import * as React from "react";
 
 // ISR設定: 1時間ごとに再生成
