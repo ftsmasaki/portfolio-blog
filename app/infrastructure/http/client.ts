@@ -32,11 +32,23 @@ export const httpClient = {
    */
   get: async <T>(
     url: string,
-    options?: RequestInit
+    options?: RequestInit & { timeoutMs?: number }
   ): Promise<E.Either<HttpError, HttpResponse<T>>> => {
     return await tryCatch(
       async () => {
-        const response = await fetch(url, { method: "GET", ...options });
+        const controller = new AbortController();
+        const timeoutMs =
+          options?.timeoutMs ??
+          Number(process.env.WORDPRESS_FETCH_TIMEOUT_MS ?? 15000);
+        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+        const response = await fetch(url, {
+          method: "GET",
+          signal: controller.signal,
+          ...options,
+        });
+
+        clearTimeout(timeoutId);
 
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -50,7 +62,12 @@ export const httpClient = {
         };
       },
       error => ({
-        message: error instanceof Error ? error.message : "Unknown error",
+        message:
+          error instanceof Error
+            ? error.name === "AbortError"
+              ? `Request timed out: ${url}`
+              : error.message
+            : "Unknown error",
         status: 500,
       })
     )();
@@ -66,16 +83,25 @@ export const httpClient = {
   post: async <T>(
     url: string,
     body: unknown,
-    options?: RequestInit
+    options?: RequestInit & { timeoutMs?: number }
   ): Promise<E.Either<HttpError, HttpResponse<T>>> => {
     return await tryCatch(
       async () => {
+        const controller = new AbortController();
+        const timeoutMs =
+          options?.timeoutMs ??
+          Number(process.env.WORDPRESS_FETCH_TIMEOUT_MS ?? 15000);
+        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
         const response = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": "application/json", ...options?.headers },
           body: JSON.stringify(body),
+          signal: controller.signal,
           ...options,
         });
+
+        clearTimeout(timeoutId);
 
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -89,7 +115,12 @@ export const httpClient = {
         };
       },
       error => ({
-        message: error instanceof Error ? error.message : "Unknown error",
+        message:
+          error instanceof Error
+            ? error.name === "AbortError"
+              ? `Request timed out: ${url}`
+              : error.message
+            : "Unknown error",
         status: 500,
       })
     )();
