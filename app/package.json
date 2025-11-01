@@ -8,7 +8,7 @@
   "scripts": {
     "predev": "node scripts/check-env.js",
     "dev": "next dev --port 3031",
-    "prebuild": "node scripts/check-env.js && yarn env:report",
+    "prebuild": "yarn env:report && node scripts/check-env.js",
     "build": "next build",
     "prestart": "node scripts/check-env.js",
     "start": "next start",
