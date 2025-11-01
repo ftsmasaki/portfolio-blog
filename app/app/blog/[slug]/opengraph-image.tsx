@@ -2,7 +2,6 @@ import { ImageResponse } from "next/og";
 import { getPostBySlug } from "@/application/di/usecases";
 import {
   OG_SIZE as size,
-  OG_CONTENT_TYPE as contentType,
   loadNotoSansJpRegular,
   DEFAULT_BACKGROUND,
   buildFonts,

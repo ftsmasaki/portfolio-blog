@@ -1,7 +1,6 @@
 import { ImageResponse } from "next/og";
 import {
   OG_SIZE as size,
-  OG_CONTENT_TYPE as contentType,
   loadNotoSansJpRegular,
   DEFAULT_BACKGROUND,
   buildFonts,

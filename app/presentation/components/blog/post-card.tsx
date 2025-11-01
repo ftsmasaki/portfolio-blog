@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect } from "react";
-import { Image } from "lucide-react";
+import { Image as ImageIcon } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -23,7 +23,7 @@ export const PostCard = ({ post }: PostCardProps) => {
     // Debug: 各カードのタグ情報を出力
     try {
       // 最小限の情報のみ表示
-       
+
       console.debug("[PostCard] tags", {
         postSlug: post.slug.value,
         tagCount: post.tags.length,
@@ -33,7 +33,7 @@ export const PostCard = ({ post }: PostCardProps) => {
           name: t.name.value,
         })),
       });
-    } catch (_) {
+    } catch {
       // no-op
     }
   }, [post]);
@@ -65,7 +65,10 @@ export const PostCard = ({ post }: PostCardProps) => {
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
-                <Image className="w-16 h-16 text-muted-foreground/50" />
+                <ImageIcon
+                  className="w-16 h-16 text-muted-foreground/50"
+                  aria-hidden="true"
+                />
               </div>
             )}
           </div>

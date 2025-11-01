@@ -31,7 +31,7 @@ export const useIntersection = (
     return () => {
       observer.disconnect();
     };
-  }, [options?.threshold, options?.root, options?.rootMargin]);
+  }, [options]);
 
   return [ref, isIntersecting];
 };

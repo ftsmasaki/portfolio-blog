@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
 import { getListStyles, getListItemStyles } from "../list";
-import type { ListType } from "../types";
 
 describe("getListStyles", () => {
   it("ulタイプで正しいスタイルを返す", () => {

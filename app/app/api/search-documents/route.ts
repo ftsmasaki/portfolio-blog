@@ -3,6 +3,18 @@ import type { SearchableDocument } from "@/infrastructure/search/search-index";
 
 export const runtime = "nodejs";
 
+interface WpRenderedField {
+  rendered?: string;
+}
+
+interface WpPostMinimal {
+  id: number | string;
+  title?: WpRenderedField | null;
+  excerpt?: WpRenderedField | null;
+  content?: WpRenderedField | null;
+  slug?: string | null;
+}
+
 function stripHtml(html: string): string {
   return html
     .replace(/<[^>]*>/g, " ")
@@ -35,9 +47,9 @@ export async function GET() {
       );
     }
 
-    const wpPosts = (await res.json()) as any[];
+    const wpPosts = (await res.json()) as WpPostMinimal[];
 
-    const documents: SearchableDocument[] = wpPosts.map((p: any) => {
+    const documents: SearchableDocument[] = wpPosts.map((p: WpPostMinimal) => {
       const id = typeof p.id === "number" ? p.id : Number(p.id);
       const title =
         typeof p.title?.rendered === "string"

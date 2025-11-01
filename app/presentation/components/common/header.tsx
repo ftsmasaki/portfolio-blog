@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useState } from "react";
 import { ThemeToggle } from "./theme-toggle";
 import { SearchModalTrigger } from "@/presentation/components/common/search-modal-trigger";
 import { SearchModal } from "@/presentation/components/common/search-modal";
-import type { SearchableDocument } from "@/infrastructure/search/search-index";
 import { useSearchDocuments } from "@/presentation/hooks/use-search-documents";
 import { cn } from "@/presentation/utils";
 import {

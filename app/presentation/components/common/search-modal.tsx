@@ -54,7 +54,7 @@ export const SearchModal = ({
     }
   };
 
-  const initialResults = useMemo(() => documents, [documents]);
+  // 初期表示は検索バーにフォーカスのみ。results はクエリで更新するため、メモ化不要
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

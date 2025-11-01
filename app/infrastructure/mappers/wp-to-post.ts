@@ -13,7 +13,6 @@ import {
   createTagId,
   createTagName,
   createTagSlug,
-  createTagCount,
 } from "@/domain/value-objects/tag";
 import { createImageUrl } from "@/domain/value-objects/common";
 
@@ -67,10 +66,26 @@ export const mapWordPressPostToDomain = (
     ),
     E.map(({ id, title, slug, excerpt, createdAt, updatedAt }) => {
       // タグのマッピング（wp:term はタクソノミーごとの配列配列。全配列をflattenしてpost_tagのみ抽出）
-      const termGroups = (wpPost._embedded?.["wp:term"] ?? []) as Array<any[]>;
-      const wpTerms = termGroups
+      type WpTerm = {
+        id: number;
+        name: string;
+        slug: string;
+        taxonomy: string;
+        count?: number;
+      };
+
+      const termGroups: WpTerm[][] = Array.isArray(
+        wpPost._embedded?.["wp:term"]
+      )
+        ? (wpPost._embedded!["wp:term"] as WpTerm[][])
+        : [];
+
+      const wpTerms: WpTerm[] = termGroups
         .flat()
-        .filter(term => term && term.taxonomy === "post_tag");
+        .filter(
+          (term): term is WpTerm =>
+            Boolean(term) && term.taxonomy === "post_tag"
+        );
 
       const tags = wpTerms
         .map(term => {

@@ -2,37 +2,6 @@ import * as React from "react";
 import type { ReactNode } from "react";
 
 /**
- * React要素ツリーに`code`要素があるか判定する純粋関数
- *
- * @param node - 検査対象のReactNode
- * @returns `code`要素が含まれている場合は`true`
- */
-const hasCodeElement = (node: ReactNode): boolean => {
-  if (typeof node === "string" || typeof node === "number") {
-    return false;
-  }
-  if (!node || typeof node !== "object") {
-    return false;
-  }
-  if (React.isValidElement(node)) {
-    // code要素を発見
-    if (node.type === "code") {
-      return true;
-    }
-    const props = node.props as { children?: ReactNode };
-    if (!props.children) {
-      return false;
-    }
-    // 子要素を再帰的に検査
-    if (Array.isArray(props.children)) {
-      return props.children.some(hasCodeElement);
-    }
-    return hasCodeElement(props.children);
-  }
-  return false;
-};
-
-/**
  * React要素ツリーの`code`要素に`data-line-numbers`属性を追加する純粋関数
  *
  * `rehype-pretty-code`によって処理されたコードブロックに行番号表示を有効化する。
@@ -82,7 +51,7 @@ export const addLineNumbers = (node: ReactNode): ReactNode => {
     // code要素にdata-line-numbers属性を追加
     if (node.type === "code" && !props["data-line-numbers"]) {
       return React.cloneElement(
-        node as React.ReactElement<any>,
+        node as React.ReactElement<unknown>,
         {
           ...props,
           "data-line-numbers": true,
@@ -102,7 +71,7 @@ export const addLineNumbers = (node: ReactNode): ReactNode => {
     // 子要素が変更された場合のみ新しい要素を生成
     if (processedChildren !== props.children) {
       return React.cloneElement(
-        node as React.ReactElement<any>,
+        node as React.ReactElement<unknown>,
         {
           ...props,
           children: processedChildren,

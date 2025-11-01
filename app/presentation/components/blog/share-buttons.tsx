@@ -6,7 +6,7 @@ import { TwitterShareButton } from "./share/twitter-button";
 import { CopyLinkButton } from "./share/copy-link-button";
 import { CopyMarkdownButton } from "./share/copy-markdown-button";
 
-export interface ShareButtonsProps extends ShareCoreProps {}
+export type ShareButtonsProps = ShareCoreProps;
 
 export function ShareButtons(props: ShareButtonsProps) {
   const { url, title, site } = props;

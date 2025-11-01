@@ -42,12 +42,14 @@ export const buildHtmlAndToc = async (
     | string
     | null
     | undefined;
+  const isNodeObject = (n: RawNode): n is { value?: string; children?: RawNode[] } =>
+    typeof n === "object" && n !== null;
+
   const toPlainText = (node: RawNode): string => {
     if (!node) return "";
     if (typeof node === "string") return node;
-    if (typeof (node as any).value === "string")
-      return (node as any).value as string;
-    const children = (node as any).children as RawNode[] | undefined;
+    if (isNodeObject(node) && typeof node.value === "string") return node.value;
+    const children = isNodeObject(node) ? node.children : undefined;
     return Array.isArray(children) ? children.map(toPlainText).join("") : "";
   };
 
