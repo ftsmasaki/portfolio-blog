@@ -15,11 +15,7 @@ const nonEmptyString = z.string().min(1);
 
 const ServerEnvSchema = z.object({
   WORDPRESS_URL: nonEmptyString,
-  REVALIDATE_SECRET: z.string().optional(),
-  WORDPRESS_FETCH_TIMEOUT_MS: z.preprocess(
-    v => (v == null || v === "" ? undefined : Number(v)),
-    z.number().int().positive().optional()
-  ),
+  REVALIDATE_SECRET: z.string(),
   DEBUG_WORDPRESS_API: z.enum(["0", "1"]).optional(),
 });
 
@@ -34,8 +30,7 @@ try {
   const pub = PublicEnvSchema.parse(process.env);
   // 追加のヒント出力
   console.log("[env] OK: 必須の環境変数が設定されています.");
-  console.log("[env] WORDPRESS_URL:", server.WORDPRESS_URL);
-  console.log("[env] NEXT_PUBLIC_SITE_URL:", pub.NEXT_PUBLIC_SITE_URL);
+  console.log("[env", { server, pub });
   process.exit(0);
 } catch (e) {
   if (e && e.issues) {

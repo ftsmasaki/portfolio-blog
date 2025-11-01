@@ -6,11 +6,7 @@ const nonEmptyString = z.string().min(1);
 // サーバー専用環境変数
 const ServerEnvSchema = z.object({
   WORDPRESS_URL: nonEmptyString,
-  REVALIDATE_SECRET: z.string().optional(),
-  WORDPRESS_FETCH_TIMEOUT_MS: z.preprocess(
-    v => (v == null || v === "" ? undefined : Number(v)),
-    z.number().int().positive().optional()
-  ),
+  REVALIDATE_SECRET: z.string(),
   DEBUG_WORDPRESS_API: z.enum(["0", "1"]).optional(),
   NODE_ENV: z.enum(["development", "test", "production"]).optional(),
 });

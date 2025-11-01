@@ -1,6 +1,8 @@
 import * as E from "fp-ts/Either";
 import { tryCatch } from "fp-ts/TaskEither";
-import { serverEnv } from "@/config/env";
+
+// WordPress API へのフェッチのデフォルトタイムアウト (ms)
+const DEFAULT_WORDPRESS_FETCH_TIMEOUT_MS = 15000;
 
 /**
  * HTTPレスポンス型
@@ -39,8 +41,7 @@ export const httpClient = {
       async () => {
         const controller = new AbortController();
         const timeoutMs =
-          options?.timeoutMs ??
-          Number(serverEnv.WORDPRESS_FETCH_TIMEOUT_MS ?? 15000);
+          options?.timeoutMs ?? DEFAULT_WORDPRESS_FETCH_TIMEOUT_MS;
         const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
         const response = await fetch(url, {
@@ -90,8 +91,7 @@ export const httpClient = {
       async () => {
         const controller = new AbortController();
         const timeoutMs =
-          options?.timeoutMs ??
-          Number(serverEnv.WORDPRESS_FETCH_TIMEOUT_MS ?? 15000);
+          options?.timeoutMs ?? DEFAULT_WORDPRESS_FETCH_TIMEOUT_MS;
         const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
         const response = await fetch(url, {
