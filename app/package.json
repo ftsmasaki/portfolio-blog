@@ -8,7 +8,7 @@
   "scripts": {
     "predev": "node scripts/check-env.js",
     "dev": "next dev --port 3031",
-    "prebuild": "node scripts/check-env.js",
+    "prebuild": "node scripts/check-env.js && yarn env:report",
     "build": "next build",
     "prestart": "node scripts/check-env.js",
     "start": "next start",
@@ -17,7 +17,8 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "test": "vitest",
     "test:run": "vitest run",
-    "type-check": "node scripts/check-env.js && tsc --noEmit"
+    "type-check": "node scripts/check-env.js && tsc --noEmit",
+    "env:report": "node -e \"const names=['WORDPRESS_URL','NEXT_PUBLIC_SITE_URL','NEXT_PUBLIC_SITE_NAME','REVALIDATE_SECRET','WORDPRESS_FETCH_TIMEOUT_MS','DEBUG_WORDPRESS_API']; const present=names.map(n=>[n,process.env[n]!==undefined]); console.log('[env] report (build scope expected):'); for(const [k,set] of present){ console.log(' -', k, set ? '[set]' : '[missing]'); } const extra=Object.keys(process.env).filter(k=>k.startsWith('NEXT_PUBLIC_')&&!names.includes(k)); if(extra.length){ console.log('[env] extra NEXT_PUBLIC_* keys:', extra.sort().join(', ')); } else { console.log('[env] extra NEXT_PUBLIC_* keys: (none)'); }\""
   },
   "dependencies": {
     "@next/third-parties": "^16.0.0",
