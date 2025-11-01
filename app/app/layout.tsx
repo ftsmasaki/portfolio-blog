@@ -15,6 +15,9 @@ const notoSansJP = Noto_Sans_JP({
 export const metadata: Metadata = {
   title: "Portfolio Blog",
   description: "ポートフォリオブログサイト",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://example.com"
+  ),
 };
 
 export default function RootLayout({

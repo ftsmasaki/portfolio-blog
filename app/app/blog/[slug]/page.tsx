@@ -57,10 +57,7 @@ export async function generateMetadata({
   const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Portfolio Blog";
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://example.com";
   const url = new URL(`/blog/${post.slug.value}`, baseUrl).toString();
-  const ogImage = new URL(
-    `/blog/${post.slug.value}/opengraph-image`,
-    baseUrl
-  ).toString();
+  const featured = post.featuredImage?.value;
 
   return {
     title: post.title.value,
@@ -72,21 +69,22 @@ export async function generateMetadata({
       type: "article",
       url,
       siteName,
-      images: [
-        {
-          url: ogImage,
-          width: 1200,
-          height: 630,
-          type: "image/png",
-          alt: `${post.title.value} | ${siteName}`,
-        },
-      ],
+      images: featured
+        ? [
+            {
+              url: featured,
+              width: 1200,
+              height: 630,
+              alt: `${post.title.value} | ${siteName}`,
+            },
+          ]
+        : undefined,
     },
     twitter: {
       card: "summary_large_image",
       title: post.title.value,
       description: post.excerpt.value,
-      images: [ogImage],
+      images: featured ? [featured] : undefined,
     },
   };
 }
