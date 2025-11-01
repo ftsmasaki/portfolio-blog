@@ -6,15 +6,18 @@
     "node": ">=20.9.0"
   },
   "scripts": {
+    "predev": "node scripts/check-env.js",
     "dev": "next dev --port 3031",
+    "prebuild": "node scripts/check-env.js",
     "build": "next build",
+    "prestart": "node scripts/check-env.js",
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "test": "vitest",
     "test:run": "vitest run",
-    "type-check": "tsc --noEmit"
+    "type-check": "node scripts/check-env.js && tsc --noEmit"
   },
   "dependencies": {
     "@next/third-parties": "^16.0.0",
@@ -55,6 +58,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^4.3.4",
+    "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "16.0.0",
     "tailwindcss": "^4",
