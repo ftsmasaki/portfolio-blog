@@ -35,7 +35,7 @@ export default async function TagDetailPage({ params }: PageProps) {
 
   const tag: Tag = tagResult.right;
 
-  let postsResult = await getPostsByTagId(tag.id.value)();
+  const postsResult = await getPostsByTagId(tag.id.value)();
   if (postsResult._tag === "Left") {
     if (postsResult.left._tag === "NetworkError") {
       throw new Error(postsResult.left.error.message);

@@ -23,7 +23,7 @@ export const PostCard = ({ post }: PostCardProps) => {
     // Debug: 各カードのタグ情報を出力
     try {
       // 最小限の情報のみ表示
-      // eslint-disable-next-line no-console
+       
       console.debug("[PostCard] tags", {
         postSlug: post.slug.value,
         tagCount: post.tags.length,
